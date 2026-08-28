@@ -1,0 +1,84 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isAuthenticated()
+        && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin'
+        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.active == true;
+    }
+
+    function hasActiveFlag() {
+      return request.resource.data.active is bool;
+    }
+
+    function hasValidCoordinates(coordinates) {
+      return coordinates is map
+        && coordinates.latitude is number
+        && coordinates.longitude is number
+        && coordinates.latitude >= -90
+        && coordinates.latitude <= 90
+        && coordinates.longitude >= -180
+        && coordinates.longitude <= 180;
+    }
+
+    function hasValidRoutePoints() {
+      return request.resource.data.coordinates is list
+        && request.resource.data.coordinates.size() >= 2;
+    }
+
+    match /users/{userId} {
+      allow read: if isAdmin() || (isAuthenticated() && request.auth.uid == userId);
+      allow create: if false;
+      allow update, delete: if false;
+    }
+
+    match /campuses/{campusId} {
+      allow read: if isAdmin() || resource.data.active == true;
+      allow create: if isAdmin() && hasActiveFlag();
+      allow update: if isAdmin() && hasActiveFlag();
+      allow delete: if isAdmin();
+    }
+
+    match /buildings/{buildingId} {
+      allow read: if isAdmin() || resource.data.active == true;
+      allow create: if isAdmin() && hasActiveFlag();
+      allow update: if isAdmin() && hasActiveFlag();
+      allow delete: if isAdmin();
+    }
+
+    match /floors/{floorId} {
+      allow read: if isAdmin() || resource.data.active == true;
+      allow create: if isAdmin() && hasActiveFlag();
+      allow update: if isAdmin() && hasActiveFlag();
+      allow delete: if isAdmin();
+    }
+
+    match /rooms/{roomId} {
+      allow read: if isAdmin() || resource.data.active == true;
+      allow create: if isAdmin() && hasActiveFlag();
+      allow update: if isAdmin() && hasActiveFlag();
+      allow delete: if isAdmin();
+    }
+
+    match /routes/{routeId} {
+      allow read: if isAdmin() || resource.data.active == true;
+      allow create: if isAdmin()
+        && hasActiveFlag()
+        && hasValidCoordinates(request.resource.data.origin)
+        && hasValidCoordinates(request.resource.data.destination)
+        && hasValidRoutePoints();
+      allow update: if isAdmin()
+        && hasActiveFlag()
+        && hasValidCoordinates(request.resource.data.origin)
+        && hasValidCoordinates(request.resource.data.destination)
+        && hasValidRoutePoints();
+      allow delete: if isAdmin();
+    }
+  }
+}

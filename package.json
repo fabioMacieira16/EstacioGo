@@ -1,0 +1,20 @@
+{
+  "name": "estaciogo",
+  "version": "1.0.0",
+  "description": "Estácio Go é uma solução de navegação interna desenvolvida para ajudar os alunos a localizar salas, laboratórios e outros espaços da instituição, mostrando de forma visual o caminho até o destino.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fabioMacieira16/EstacioGo.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fabioMacieira16/EstacioGo/issues"
+  },
+  "homepage": "https://github.com/fabioMacieira16/EstacioGo#readme"
+}
