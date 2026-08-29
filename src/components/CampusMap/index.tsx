@@ -1,14 +1,8 @@
-import { useEffect, useRef, type ComponentRef } from 'react';
+import { useCallback, useEffect, useRef, type ComponentRef } from 'react';
 import { StyleSheet } from 'react-native';
-import NativeMapView, {
-  Marker,
-  Polyline,
-} from 'react-native-maps';
+import NativeMapView, { Marker, Polyline } from 'react-native-maps';
 
-import {
-  DEFAULT_MAP_ORIGIN,
-  DEFAULT_MAP_REGION,
-} from '../../constants/map';
+import { DEFAULT_MAP_ORIGIN, DEFAULT_MAP_REGION } from '../../constants/map';
 import type { Coordinates } from '../../types/coordinates';
 
 export type CampusMapProps = {
@@ -27,16 +21,16 @@ export function CampusMap({
   const mapRef = useRef<ComponentRef<typeof NativeMapView> | null>(null);
   const coordinatesToFit = [origin, ...routeCoordinates, destination];
 
-  const fitRoute = () => {
+  const fitRoute = useCallback(() => {
     mapRef.current?.fitToCoordinates(coordinatesToFit, {
       edgePadding: { top: 80, right: 48, bottom: 80, left: 48 },
       animated: true,
     });
-  };
+  }, [coordinatesToFit]);
 
   useEffect(() => {
     fitRoute();
-  }, [origin, destination, routeCoordinates]);
+  }, [fitRoute]);
 
   return (
     <NativeMapView

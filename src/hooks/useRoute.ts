@@ -13,7 +13,9 @@ export function useRoute(roomId: string) {
 
   useEffect(() => {
     let mounted = true;
-    void roomService.getRoomById(roomId).then(async (result) => {
+    void roomService
+      .getRoomById(roomId)
+      .then(async (result) => {
         if (mounted) setRoom(result);
         if (result?.routeId) {
           const routeResult = await routeService.getRouteById(result.routeId);
