@@ -1,5 +1,5 @@
 import { useLocalSearchParams } from 'expo-router';
-import { ActivityIndicator, Text, View } from 'react-native';
+import { ActivityIndicator, Image, StyleSheet, Text, View } from 'react-native';
 
 import { CampusMap } from '../../src/components/CampusMap';
 import { DEFAULT_MAP_ORIGIN } from '../../src/constants/map';
@@ -26,6 +26,26 @@ export default function RouteScreen() {
         destination={route?.destination ?? room.destination}
         routeCoordinates={route?.coordinates ?? []}
       />
+      <Text style={styles.floorPlanTitle}>Planta da faculdade</Text>
+      <Image
+        source={require('../../Documentation/mapa_da_faculdade.jpeg')}
+        style={styles.floorPlan}
+        resizeMode="contain"
+        accessibilityLabel="Planta baixa da faculdade"
+      />
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  floorPlanTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    marginTop: 16,
+  },
+  floorPlan: {
+    height: 360,
+    marginTop: 8,
+    width: '100%',
+  },
+});

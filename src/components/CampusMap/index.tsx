@@ -19,14 +19,16 @@ export function CampusMap({
   userLocation,
 }: CampusMapProps) {
   const mapRef = useRef<ComponentRef<typeof NativeMapView> | null>(null);
-  const coordinatesToFit = [origin, ...routeCoordinates, destination];
 
   const fitRoute = useCallback(() => {
-    mapRef.current?.fitToCoordinates(coordinatesToFit, {
-      edgePadding: { top: 80, right: 48, bottom: 80, left: 48 },
-      animated: true,
-    });
-  }, [coordinatesToFit]);
+    mapRef.current?.fitToCoordinates(
+      [origin, ...routeCoordinates, destination],
+      {
+        edgePadding: { top: 80, right: 48, bottom: 80, left: 48 },
+        animated: true,
+      },
+    );
+  }, [origin, routeCoordinates, destination]);
 
   useEffect(() => {
     fitRoute();
