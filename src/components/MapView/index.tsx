@@ -1,3 +1,1 @@
-export function MapView() {
-  return null;
-}
+export { CampusMap as MapView } from '../CampusMap';
