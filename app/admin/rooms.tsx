@@ -1,3 +1,4 @@
+import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { Button, ScrollView, Text, View } from 'react-native';
 
@@ -6,6 +7,7 @@ import { useRooms } from '../../src/hooks/useRooms';
 import type { Room } from '../../src/types/room';
 
 export default function AdminRoomsScreen() {
+  const router = useRouter();
   const { rooms, loading, error, create, update, deactivate, remove } =
     useRooms();
   const [editing, setEditing] = useState<Room | null>(null);
@@ -17,6 +19,10 @@ export default function AdminRoomsScreen() {
   return (
     <ScrollView>
       <Text>Administração de salas</Text>
+      <Button
+        title="Abrir editor de rotas"
+        onPress={() => router.push('/admin/routes')}
+      />
       <RoomForm
         key={editing?.id ?? 'new'}
         initialValue={editing ? inputFromRoom(editing) : undefined}

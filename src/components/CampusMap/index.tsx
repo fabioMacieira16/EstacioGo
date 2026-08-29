@@ -10,6 +10,7 @@ export type CampusMapProps = {
   destination: Coordinates;
   routeCoordinates: Coordinates[];
   userLocation?: Coordinates;
+  onMapPress?: (coordinate: Coordinates) => void;
 };
 
 export function CampusMap({
@@ -17,6 +18,7 @@ export function CampusMap({
   destination,
   routeCoordinates,
   userLocation,
+  onMapPress,
 }: CampusMapProps) {
   const mapRef = useRef<ComponentRef<typeof NativeMapView> | null>(null);
 
@@ -40,11 +42,24 @@ export function CampusMap({
       style={styles.map}
       initialRegion={DEFAULT_MAP_REGION}
       onMapReady={fitRoute}
+      onPress={
+        onMapPress
+          ? (event) => onMapPress(event.nativeEvent.coordinate)
+          : undefined
+      }
       showsCompass
       showsUserLocation={false}
     >
       <Marker coordinate={origin} title="Origem" pinColor="#2563EB" />
       <Marker coordinate={destination} title="Destino" pinColor="#DC2626" />
+      {routeCoordinates.slice(1, -1).map((coordinate, index) => (
+        <Marker
+          key={`${coordinate.latitude}-${coordinate.longitude}-${index}`}
+          coordinate={coordinate}
+          title={`Ponto intermediário ${index + 1}`}
+          pinColor="#7C3AED"
+        />
+      ))}
       <Marker
         coordinate={DEFAULT_MAP_ORIGIN}
         title="Faculdade"
