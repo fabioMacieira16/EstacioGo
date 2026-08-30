@@ -22,7 +22,6 @@ export function useRooms(includeInactive = true) {
 
   useEffect(() => {
     // The service result is external data synchronized into the hook state.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     void reload();
   }, [reload]);
 

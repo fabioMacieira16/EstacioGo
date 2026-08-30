@@ -9,7 +9,7 @@ import type { Room } from '../src/types/room';
 export default function HomeScreen() {
   const router = useRouter();
   const { rooms, loading, error, search } = useRoomSearch();
-  const selectRoom = (room: Room) => router.push(`/route/${room.id}`);
+  const selectRoom = (room: Room) => router.push(`/room/${room.id}`);
   return (
     <View>
       <Text>Campus Route</Text>
