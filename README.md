@@ -26,3 +26,18 @@ Prittier
 Jest
 
 
+## Como executar o projeto
+1. Clone o repositório do projeto:
+   ```bash
+   git clone <URL_DO_REPOSITORIO>
+   ```
+
+2. Instale as dependências:
+   ```bash
+   npm install
+   ```
+
+3. Execute o projeto:
+   ```bash
+   npx expo start --clear --tunnel
+   ```

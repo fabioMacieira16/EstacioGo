@@ -27,15 +27,21 @@
   "dependencies": {
     "@react-native/assets-registry": "^0.87.1",
     "expo": "^54.0.37",
+    "expo-constants": "~18.0.14",
+    "expo-linking": "~8.0.12",
     "expo-location": "^19.0.8",
     "expo-router": "^6.0.24",
     "firebase": "^12.18.0",
-    "react": "^19.1.0",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
     "react-native": "0.81.5",
-    "react-native-maps": "1.20.1"
+    "react-native-maps": "1.20.1",
+    "react-native-safe-area-context": "~5.6.0",
+    "react-native-screens": "~4.16.0"
   },
   "devDependencies": {
     "@types/jest": "29.5.14",
+    "@types/node": "^26.4.0",
     "@typescript-eslint/eslint-plugin": "^8.68.0",
     "@typescript-eslint/parser": "^8.68.0",
     "eslint": "^9.39.5",
