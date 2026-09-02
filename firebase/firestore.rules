@@ -13,8 +13,8 @@ service cloud.firestore {
         && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.active == true;
     }
 
-    function hasActiveFlag() {
-      return request.resource.data.active is bool;
+    function hasOnlyKeys(keys) {
+      return request.resource.data.keys().hasOnly(keys);
     }
 
     function hasValidCoordinates(coordinates) {
@@ -27,9 +27,39 @@ service cloud.firestore {
         && coordinates.longitude <= 180;
     }
 
-    function hasValidRoutePoints() {
-      return request.resource.data.coordinates is list
-        && request.resource.data.coordinates.size() >= 2;
+    function hasValidRoutePoints(points) {
+      return points is list
+        && points.size() >= 2
+        && points.size() <= 200
+        && hasValidCoordinates(points[0])
+        && hasValidCoordinates(points[points.size() - 1]);
+    }
+
+    function hasActiveRouteReference() {
+      return request.resource.data.routeId == null
+        || (
+          request.resource.data.routeId is string
+          && exists(/databases/$(database)/documents/routes/$(request.resource.data.routeId))
+          && get(/databases/$(database)/documents/routes/$(request.resource.data.routeId)).data.active == true
+        );
+    }
+
+    function hasValidActiveFlag() {
+      return request.resource.data.active is bool;
+    }
+
+    function isUnchanged(field) {
+      return request.resource.data[field] == resource.data[field];
+    }
+
+    function optionalString(field) {
+      return !request.resource.data.keys().has(field)
+        || request.resource.data[field] is string;
+    }
+
+    function optionalTimestamp(field) {
+      return !request.resource.data.keys().has(field)
+        || request.resource.data[field] is timestamp;
     }
 
     match /users/{userId} {
@@ -40,44 +70,128 @@ service cloud.firestore {
 
     match /campuses/{campusId} {
       allow read: if isAdmin() || resource.data.active == true;
-      allow create: if isAdmin() && hasActiveFlag();
-      allow update: if isAdmin() && hasActiveFlag();
+      allow create: if isAdmin()
+        && hasOnlyKeys(['name', 'shortName', 'defaultOrigin', 'active', 'createdAt', 'updatedAt'])
+        && hasValidActiveFlag()
+        && request.resource.data.name is string
+        && hasValidCoordinates(request.resource.data.defaultOrigin);
+      allow update: if isAdmin()
+        && hasOnlyKeys(['name', 'shortName', 'defaultOrigin', 'active', 'createdAt', 'updatedAt'])
+        && hasValidActiveFlag()
+        && request.resource.data.name is string
+        && hasValidCoordinates(request.resource.data.defaultOrigin)
+        && isUnchanged('createdAt');
       allow delete: if isAdmin();
     }
 
     match /buildings/{buildingId} {
       allow read: if isAdmin() || resource.data.active == true;
-      allow create: if isAdmin() && hasActiveFlag();
-      allow update: if isAdmin() && hasActiveFlag();
+      allow create: if isAdmin()
+        && hasOnlyKeys(['campusId', 'code', 'name', 'description', 'active', 'createdAt', 'updatedAt'])
+        && hasValidActiveFlag()
+        && request.resource.data.campusId is string
+        && request.resource.data.code is string
+        && request.resource.data.name is string
+        && optionalString('description')
+        && optionalTimestamp('createdAt')
+        && optionalTimestamp('updatedAt');
+      allow update: if isAdmin()
+        && hasOnlyKeys(['campusId', 'code', 'name', 'description', 'active', 'createdAt', 'updatedAt'])
+        && hasValidActiveFlag()
+        && request.resource.data.campusId is string
+        && request.resource.data.code is string
+        && request.resource.data.name is string
+        && optionalString('description')
+        && optionalTimestamp('createdAt')
+        && optionalTimestamp('updatedAt')
+        && isUnchanged('createdAt');
       allow delete: if isAdmin();
     }
 
     match /floors/{floorId} {
       allow read: if isAdmin() || resource.data.active == true;
-      allow create: if isAdmin() && hasActiveFlag();
-      allow update: if isAdmin() && hasActiveFlag();
+      allow create: if isAdmin()
+        && hasOnlyKeys(['campusId', 'buildingId', 'number', 'name', 'active', 'createdAt', 'updatedAt'])
+        && hasValidActiveFlag()
+        && request.resource.data.campusId is string
+        && request.resource.data.buildingId is string
+        && request.resource.data.number is int
+        && request.resource.data.name is string
+        && optionalTimestamp('createdAt')
+        && optionalTimestamp('updatedAt');
+      allow update: if isAdmin()
+        && hasOnlyKeys(['campusId', 'buildingId', 'number', 'name', 'active', 'createdAt', 'updatedAt'])
+        && hasValidActiveFlag()
+        && request.resource.data.campusId is string
+        && request.resource.data.buildingId is string
+        && request.resource.data.number is int
+        && request.resource.data.name is string
+        && optionalTimestamp('createdAt')
+        && optionalTimestamp('updatedAt')
+        && isUnchanged('createdAt');
       allow delete: if isAdmin();
     }
 
     match /rooms/{roomId} {
       allow read: if isAdmin() || resource.data.active == true;
-      allow create: if isAdmin() && hasActiveFlag();
-      allow update: if isAdmin() && hasActiveFlag();
+      allow create: if isAdmin()
+        && hasOnlyKeys(['campusId', 'buildingId', 'floorId', 'floor', 'code', 'codeNormalized', 'name', 'description', 'destination', 'routeId', 'active', 'createdAt', 'updatedAt'])
+        && hasValidActiveFlag()
+        && optionalString('campusId')
+        && optionalString('floorId')
+        && optionalString('codeNormalized')
+        && optionalTimestamp('createdAt')
+        && optionalTimestamp('updatedAt')
+        && request.resource.data.code is string
+        && request.resource.data.name is string
+        && request.resource.data.buildingId is string
+        && request.resource.data.floor is int
+        && request.resource.data.description is string
+        && hasValidCoordinates(request.resource.data.destination)
+        && (request.resource.data.routeId == null || request.resource.data.routeId is string)
+        && hasActiveRouteReference();
+      allow update: if isAdmin()
+        && hasOnlyKeys(['campusId', 'buildingId', 'floorId', 'floor', 'code', 'codeNormalized', 'name', 'description', 'destination', 'routeId', 'active', 'createdAt', 'updatedAt'])
+        && hasValidActiveFlag()
+        && optionalString('campusId')
+        && optionalString('floorId')
+        && optionalString('codeNormalized')
+        && optionalTimestamp('createdAt')
+        && optionalTimestamp('updatedAt')
+        && request.resource.data.code is string
+        && request.resource.data.name is string
+        && request.resource.data.buildingId is string
+        && request.resource.data.floor is int
+        && request.resource.data.description is string
+        && hasValidCoordinates(request.resource.data.destination)
+        && (request.resource.data.routeId == null || request.resource.data.routeId is string)
+        && hasActiveRouteReference();
       allow delete: if isAdmin();
     }
 
     match /routes/{routeId} {
       allow read: if isAdmin() || resource.data.active == true;
       allow create: if isAdmin()
-        && hasActiveFlag()
+        && hasOnlyKeys(['campusId', 'name', 'origin', 'destination', 'coordinates', 'active', 'createdAt', 'updatedAt'])
+        && hasValidActiveFlag()
+        && request.resource.data.campusId is string
+        && request.resource.data.name is string
         && hasValidCoordinates(request.resource.data.origin)
         && hasValidCoordinates(request.resource.data.destination)
-        && hasValidRoutePoints();
+        && hasValidRoutePoints(request.resource.data.coordinates)
+        && request.resource.data.coordinates[0] == request.resource.data.origin
+        && request.resource.data.coordinates[request.resource.data.coordinates.size() - 1] == request.resource.data.destination;
       allow update: if isAdmin()
-        && hasActiveFlag()
+        && hasOnlyKeys(['campusId', 'name', 'origin', 'destination', 'coordinates', 'active', 'createdAt', 'updatedAt'])
+        && hasValidActiveFlag()
+        && request.resource.data.campusId is string
+        && request.resource.data.name is string
         && hasValidCoordinates(request.resource.data.origin)
         && hasValidCoordinates(request.resource.data.destination)
-        && hasValidRoutePoints();
+        && hasValidRoutePoints(request.resource.data.coordinates)
+        && request.resource.data.coordinates[0] == request.resource.data.origin
+        && request.resource.data.coordinates[request.resource.data.coordinates.size() - 1] == request.resource.data.destination
+        && isUnchanged('createdAt');
       allow delete: if isAdmin();
     }
   }
