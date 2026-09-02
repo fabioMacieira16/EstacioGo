@@ -27,8 +27,8 @@ export function CampusMap({
   const latitudeRange = Math.max(maxLatitude - minLatitude, 0.000001);
   const longitudeRange = Math.max(maxLongitude - minLongitude, 0.000001);
   const toPosition = (point: Coordinates) => ({
-    x: ((point.longitude - minLongitude) / longitudeRange) * 76 + 12,
-    y: (1 - (point.latitude - minLatitude) / latitudeRange) * 72 + 14,
+    x: Math.min(92, Math.max(8, ((point.longitude - minLongitude) / longitudeRange) * 76 + 12)),
+    y: Math.min(86, Math.max(14, (1 - (point.latitude - minLatitude) / latitudeRange) * 72 + 14)),
   });
   const positions = routeCoordinates.map(toPosition);
   const userPosition = userLocation ? toPosition(userLocation) : undefined;

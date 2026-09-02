@@ -22,7 +22,7 @@ export default function RouteScreen() {
   const router = useRouter();
   const { roomId } = useLocalSearchParams<{ roomId: string }>();
   const { room, route, loading, error } = useRoute(roomId);
-  const userLocation = useUserLocation();
+  const userLocationState = useUserLocation();
 
   if (loading) return <ActivityIndicator />;
   if (error || !room) return <Text>{error ?? 'Sala não encontrada.'}</Text>;
@@ -30,6 +30,15 @@ export default function RouteScreen() {
   const origin = route?.origin ?? DEFAULT_MAP_ORIGIN;
   const destination = route?.destination ?? room.destination;
   const routeCoordinates = route?.coordinates ?? [origin, destination];
+
+  const locationMessage =
+    userLocationState.status === 'permission-denied'
+      ? 'Localização desativada. A rota cadastrada continua disponível.'
+      : userLocationState.status === 'unavailable'
+        ? 'Localização indisponível. A rota cadastrada continua disponível.'
+        : userLocationState.status === 'loading'
+          ? 'Obtendo localização do dispositivo...'
+          : 'Localização do dispositivo atualizada.';
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -63,8 +72,9 @@ export default function RouteScreen() {
         origin={origin}
         destination={destination}
         routeCoordinates={routeCoordinates}
-        userLocation={userLocation}
+        userLocation={userLocationState.location}
       />
+      <Text style={styles.locationStatus}>{locationMessage}</Text>
       <Text style={styles.floorPlanTitle}>Referência da planta</Text>
       <Image
         source={require('../../Documentation/mapa_da_faculdade.jpeg')}
@@ -123,4 +133,5 @@ const styles = StyleSheet.create({
     padding: 14,
   },
   secondaryButtonText: { color: '#0F172A', fontSize: 16, fontWeight: '700' },
+  locationStatus: { color: '#64748B', fontSize: 13, lineHeight: 19 },
 });

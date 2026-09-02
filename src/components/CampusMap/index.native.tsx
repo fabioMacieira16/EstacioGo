@@ -23,13 +23,13 @@ export function CampusMap({
   const mapRef = useRef<ComponentRef<typeof NativeMapView> | null>(null);
   const fitRoute = useCallback(() => {
     mapRef.current?.fitToCoordinates(
-      [origin, ...routeCoordinates, destination, ...(userLocation ? [userLocation] : [])],
+      [origin, ...routeCoordinates, destination],
       {
         edgePadding: { top: 80, right: 48, bottom: 80, left: 48 },
         animated: true,
       },
     );
-  }, [origin, routeCoordinates, destination, userLocation]);
+  }, [origin, routeCoordinates, destination]);
 
   useEffect(() => {
     fitRoute();
