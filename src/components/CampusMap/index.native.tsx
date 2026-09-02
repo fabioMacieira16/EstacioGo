@@ -21,16 +21,15 @@ export function CampusMap({
   onMapPress,
 }: CampusMapProps) {
   const mapRef = useRef<ComponentRef<typeof NativeMapView> | null>(null);
-
   const fitRoute = useCallback(() => {
     mapRef.current?.fitToCoordinates(
-      [origin, ...routeCoordinates, destination],
+      [origin, ...routeCoordinates, destination, ...(userLocation ? [userLocation] : [])],
       {
         edgePadding: { top: 80, right: 48, bottom: 80, left: 48 },
         animated: true,
       },
     );
-  }, [origin, routeCoordinates, destination]);
+  }, [origin, routeCoordinates, destination, userLocation]);
 
   useEffect(() => {
     fitRoute();
@@ -67,18 +66,10 @@ export function CampusMap({
         pinColor="#0F766E"
       />
       {userLocation ? (
-        <Marker
-          coordinate={userLocation}
-          title="Sua localização"
-          pinColor="#F59E0B"
-        />
+        <Marker coordinate={userLocation} title="Sua localização" pinColor="#F59E0B" />
       ) : null}
       {routeCoordinates.length > 1 ? (
-        <Polyline
-          coordinates={routeCoordinates}
-          strokeColor="#2563EB"
-          strokeWidth={5}
-        />
+        <Polyline coordinates={routeCoordinates} strokeColor="#2563EB" strokeWidth={5} />
       ) : null}
     </NativeMapView>
   );
