@@ -14,8 +14,8 @@ import { useAuth } from '../src/hooks/useAuth';
 
 export default function LoginScreen() {
   const { login, loading, error } = useAuth();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('aluno');
+  const [password, setPassword] = useState('aluno');
   const [formError, setFormError] = useState<string | null>(null);
 
   const submit = async () => {
@@ -43,17 +43,16 @@ export default function LoginScreen() {
           <Text style={styles.eyebrow}>CAMPUS ROUTE</Text>
           <Text style={styles.title}>Entre para encontrar seu caminho.</Text>
           <Text style={styles.subtitle}>
-            Use sua conta institucional para consultar salas e rotas.
+            Acesse o fluxo de teste para consultar salas e rotas.
           </Text>
 
           <View style={styles.inputGroup}>
-            <Text style={styles.inputLabel}>E-mail</Text>
+            <Text style={styles.inputLabel}>Usuário</Text>
             <TextInput
               autoCapitalize="none"
-              autoComplete="email"
-              keyboardType="email-address"
+              autoComplete="username"
               onChangeText={setEmail}
-              placeholder="E-mail institucional"
+              placeholder="Usuário"
               placeholderTextColor="#94A3B8"
               style={styles.input}
               value={email}

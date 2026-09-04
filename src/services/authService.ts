@@ -1,66 +1,37 @@
-import {
-  onAuthStateChanged,
-  signInWithEmailAndPassword,
-  signOut,
-  type User as FirebaseUser,
-  type Unsubscribe,
-} from 'firebase/auth';
-import { doc, getDoc } from 'firebase/firestore';
+import type { Unsubscribe } from 'firebase/auth';
 
-import { auth } from '../firebase/auth';
-import { db } from '../firebase/firestore';
-import type { User, UserRole } from '../types/user';
+import type { User } from '../types/user';
 
-function normalizeRole(role: unknown): UserRole | null {
-  if (role === 'ADMIN' || role === 'admin') return 'ADMIN';
-  if (role === 'STUDENT' || role === 'student') return 'STUDENT';
-  return null;
-}
+const MOCK_USERNAME = 'aluno';
+const MOCK_PASSWORD = 'aluno';
 
-async function getProfile(firebaseUser: FirebaseUser): Promise<User | null> {
-  const snapshot = await getDoc(doc(db, 'users', firebaseUser.uid));
-  if (!snapshot.exists()) return null;
+const mockUser: User = {
+  id: 'mock-aluno',
+  email: 'aluno',
+  role: 'STUDENT',
+  active: true,
+};
 
-  const data = snapshot.data();
-  const role = normalizeRole(data.role);
-  if (!role || data.active !== true) return null;
-
-  return {
-    id: firebaseUser.uid,
-    email: firebaseUser.email ?? '',
-    role,
-    active: true,
-  };
-}
+// V2: substituir este adaptador pela integração Firebase e pelas validações
+// de API Key, credenciais e tokens definidas para a versão de segurança.
+let currentUser: User | null = null;
 
 export const authService = {
   async login(email: string, password: string): Promise<User> {
-    const credential = await signInWithEmailAndPassword(
-      auth,
-      email.trim(),
-      password,
-    );
-    const profile = await getProfile(credential.user);
-
-    if (!profile) {
-      await signOut(auth);
-      throw new Error('Usuário sem perfil ativo no Campus Route.');
+    if (email.trim().toLowerCase() !== MOCK_USERNAME || password !== MOCK_PASSWORD) {
+      throw new Error('Use o usuário e senha de teste: aluno / aluno.');
     }
 
-    return profile;
+    currentUser = mockUser;
+    return mockUser;
   },
 
-  logout(): Promise<void> {
-    return signOut(auth);
-  },
-
-  getCurrentProfile(firebaseUser: FirebaseUser | null): Promise<User | null> {
-    return firebaseUser ? getProfile(firebaseUser) : Promise.resolve(null);
+  async logout(): Promise<void> {
+    currentUser = null;
   },
 
   subscribe(listener: (user: User | null) => void): Unsubscribe {
-    return onAuthStateChanged(auth, (firebaseUser) => {
-      void this.getCurrentProfile(firebaseUser).then(listener);
-    });
+    listener(currentUser);
+    return () => undefined;
   },
 };
