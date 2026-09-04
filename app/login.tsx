@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import {
   ActivityIndicator,
-  Button,
   KeyboardAvoidingView,
   Platform,
+  Pressable,
   StyleSheet,
   Text,
   TextInput,
@@ -36,57 +36,168 @@ export default function LoginScreen() {
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       style={styles.screen}
     >
+      <View style={styles.backgroundGlow} />
+      <View style={styles.backgroundGlowSecondary} />
       <View style={styles.container}>
-        <Text style={styles.eyebrow}>CAMPUS ROUTE</Text>
-        <Text style={styles.title}>Entre para encontrar seu caminho.</Text>
-        <Text style={styles.subtitle}>
-          Use sua conta institucional para consultar salas e rotas.
-        </Text>
-        <TextInput
-          autoCapitalize="none"
-          autoComplete="email"
-          keyboardType="email-address"
-          onChangeText={setEmail}
-          placeholder="E-mail institucional"
-          style={styles.input}
-          value={email}
-        />
-        <TextInput
-          autoCapitalize="none"
-          autoComplete="password"
-          onChangeText={setPassword}
-          placeholder="Senha"
-          secureTextEntry
-          style={styles.input}
-          value={password}
-        />
-        {formError || error ? (
-          <Text style={styles.error}>{formError ?? error}</Text>
-        ) : null}
-        <Button
-          disabled={loading}
-          onPress={() => void submit()}
-          title="Entrar"
-        />
-        {loading ? <ActivityIndicator style={styles.loading} /> : null}
+        <View style={styles.card}>
+          <Text style={styles.eyebrow}>CAMPUS ROUTE</Text>
+          <Text style={styles.title}>Entre para encontrar seu caminho.</Text>
+          <Text style={styles.subtitle}>
+            Use sua conta institucional para consultar salas e rotas.
+          </Text>
+
+          <View style={styles.inputGroup}>
+            <Text style={styles.inputLabel}>E-mail</Text>
+            <TextInput
+              autoCapitalize="none"
+              autoComplete="email"
+              keyboardType="email-address"
+              onChangeText={setEmail}
+              placeholder="E-mail institucional"
+              placeholderTextColor="#94A3B8"
+              style={styles.input}
+              value={email}
+            />
+          </View>
+
+          <View style={styles.inputGroup}>
+            <Text style={styles.inputLabel}>Senha</Text>
+            <TextInput
+              autoCapitalize="none"
+              autoComplete="password"
+              onChangeText={setPassword}
+              placeholder="Senha"
+              placeholderTextColor="#94A3B8"
+              secureTextEntry
+              style={styles.input}
+              value={password}
+            />
+          </View>
+
+          {formError || error ? (
+            <Text style={styles.error}>{formError ?? error}</Text>
+          ) : null}
+
+          <Pressable
+            accessibilityRole="button"
+            disabled={loading}
+            onPress={() => void submit()}
+            style={({ pressed }) => [
+              styles.primaryButton,
+              loading && styles.primaryButtonDisabled,
+              pressed && styles.primaryButtonPressed,
+            ]}
+          >
+            {loading ? (
+              <ActivityIndicator color="#FFFFFF" size="small" />
+            ) : (
+              <Text style={styles.primaryButtonText}>Entrar</Text>
+            )}
+          </Pressable>
+        </View>
       </View>
     </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
-  screen: { backgroundColor: '#F8FAFC', flex: 1 },
-  container: { flex: 1, gap: 14, justifyContent: 'center', padding: 24 },
-  eyebrow: { color: '#0F766E', fontSize: 12, fontWeight: '800' },
-  title: { color: '#0F172A', fontSize: 30, fontWeight: '800' },
-  subtitle: { color: '#475569', fontSize: 16, lineHeight: 23, marginBottom: 12 },
-  input: {
-    backgroundColor: '#FFFFFF',
-    borderColor: '#CBD5E1',
-    borderRadius: 6,
-    borderWidth: 1,
-    padding: 14,
+  screen: {
+    backgroundColor: '#F8FAFC',
+    flex: 1,
+    position: 'relative',
   },
-  error: { color: '#B91C1C' },
-  loading: { marginTop: 4 },
+  backgroundGlow: {
+    backgroundColor: '#DFF7F4',
+    borderRadius: 180,
+    height: 360,
+    position: 'absolute',
+    right: -90,
+    top: -80,
+    width: 360,
+  },
+  backgroundGlowSecondary: {
+    backgroundColor: '#E0E7FF',
+    borderRadius: 180,
+    bottom: -90,
+    height: 260,
+    left: -70,
+    position: 'absolute',
+    width: 260,
+  },
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    padding: 24,
+    zIndex: 1,
+  },
+  card: {
+    backgroundColor: '#FFFFFF',
+    borderColor: '#E2E8F0',
+    borderRadius: 24,
+    borderWidth: 1,
+    elevation: 6,
+    gap: 18,
+    padding: 24,
+    shadowColor: '#0F172A',
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.08,
+    shadowRadius: 18,
+  },
+  eyebrow: {
+    color: '#0F766E',
+    fontSize: 12,
+    fontWeight: '800',
+    letterSpacing: 1.6,
+  },
+  title: {
+    color: '#0F172A',
+    fontSize: 30,
+    fontWeight: '800',
+    lineHeight: 38,
+  },
+  subtitle: {
+    color: '#475569',
+    fontSize: 16,
+    lineHeight: 23,
+  },
+  inputGroup: {
+    gap: 8,
+  },
+  inputLabel: {
+    color: '#334155',
+    fontSize: 13,
+    fontWeight: '700',
+  },
+  input: {
+    backgroundColor: '#F8FAFC',
+    borderColor: '#CBD5E1',
+    borderRadius: 12,
+    borderWidth: 1,
+    color: '#0F172A',
+    fontSize: 15,
+    paddingHorizontal: 14,
+    paddingVertical: 13,
+  },
+  error: {
+    color: '#B91C1C',
+    fontSize: 13,
+    fontWeight: '600',
+  },
+  primaryButton: {
+    alignItems: 'center',
+    backgroundColor: '#0F766E',
+    borderRadius: 12,
+    paddingVertical: 14,
+  },
+  primaryButtonDisabled: {
+    opacity: 0.7,
+  },
+  primaryButtonPressed: {
+    opacity: 0.9,
+  },
+  primaryButtonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: '700',
+  },
 });

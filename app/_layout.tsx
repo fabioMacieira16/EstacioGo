@@ -1,5 +1,5 @@
 import { Redirect, Stack, useSegments } from 'expo-router';
-import { ActivityIndicator, View } from 'react-native';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
 
 import { AuthProvider } from '../src/contexts/AuthContext';
 import { useAuth } from '../src/hooks/useAuth';
@@ -12,8 +12,8 @@ function RouteGuard() {
 
   if (loading) {
     return (
-      <View>
-        <ActivityIndicator />
+      <View style={styles.loadingScreen}>
+        <ActivityIndicator color="#0F766E" size="large" />
       </View>
     );
   }
@@ -22,7 +22,14 @@ function RouteGuard() {
   if (user && isLoginRoute) return <Redirect href="/" />;
   if (user && isAdminRoute && user.role !== 'ADMIN') return <Redirect href="/" />;
 
-  return <Stack />;
+  return (
+    <Stack
+      screenOptions={{
+        headerShown: false,
+        contentStyle: { backgroundColor: '#F8FAFC' },
+      }}
+    />
+  );
 }
 
 export default function RootLayout() {
@@ -32,3 +39,12 @@ export default function RootLayout() {
     </AuthProvider>
   );
 }
+
+const styles = StyleSheet.create({
+  loadingScreen: {
+    alignItems: 'center',
+    backgroundColor: '#F8FAFC',
+    flex: 1,
+    justifyContent: 'center',
+  },
+});

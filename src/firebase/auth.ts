@@ -9,5 +9,5 @@ export const auth =
 	Platform.OS === 'web'
 		? getAuth(firebaseApp)
 		: initializeAuth(firebaseApp, {
-				persistence: getReactNativePersistence(AsyncStorage),
+				persistence: getReactNativePersistence(AsyncStorage) as any,
 			});
