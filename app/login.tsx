@@ -45,6 +45,9 @@ export default function LoginScreen() {
           <Text style={styles.subtitle}>
             Acesse o fluxo de teste para consultar salas e rotas.
           </Text>
+          <Text style={styles.testCredentials}>
+            Teste: aluno/aluno ou admin/admin.
+          </Text>
 
           <View style={styles.inputGroup}>
             <Text style={styles.inputLabel}>Usuário</Text>
@@ -158,6 +161,11 @@ const styles = StyleSheet.create({
     color: '#475569',
     fontSize: 16,
     lineHeight: 23,
+  },
+  testCredentials: {
+    color: '#0F766E',
+    fontSize: 13,
+    fontWeight: '700',
   },
   inputGroup: {
     gap: 8,

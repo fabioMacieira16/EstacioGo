@@ -2,13 +2,17 @@ import type { Unsubscribe } from 'firebase/auth';
 
 import type { User } from '../types/user';
 
-const MOCK_USERNAME = 'aluno';
-const MOCK_PASSWORD = 'aluno';
-
-const mockUser: User = {
+const mockStudent: User = {
   id: 'mock-aluno',
   email: 'aluno',
   role: 'STUDENT',
+  active: true,
+};
+
+const mockAdmin: User = {
+  id: 'mock-admin',
+  email: 'admin',
+  role: 'ADMIN',
   active: true,
 };
 
@@ -18,12 +22,13 @@ let currentUser: User | null = null;
 
 export const authService = {
   async login(email: string, password: string): Promise<User> {
-    if (email.trim().toLowerCase() !== MOCK_USERNAME || password !== MOCK_PASSWORD) {
-      throw new Error('Use o usuário e senha de teste: aluno / aluno.');
+    const username = email.trim().toLowerCase();
+    if (password !== username || !['aluno', 'admin'].includes(username)) {
+      throw new Error('Use aluno/aluno ou admin/admin para entrar.');
     }
 
-    currentUser = mockUser;
-    return mockUser;
+    currentUser = username === 'admin' ? mockAdmin : mockStudent;
+    return currentUser;
   },
 
   async logout(): Promise<void> {

@@ -133,8 +133,10 @@ service cloud.firestore {
     }
 
     match /rooms/{roomId} {
-      allow read: if isAdmin() || resource.data.active == true;
-      allow create: if isAdmin()
+      // V1: o app usa uma identidade mock e ainda nao envia Firebase Auth.
+      // V2: restaurar isAdmin() quando a autenticacao definitiva existir.
+      allow read: if true;
+      allow create: if true
         && hasOnlyKeys(['campusId', 'buildingId', 'floorId', 'floor', 'code', 'codeNormalized', 'name', 'description', 'destination', 'routeId', 'active', 'createdAt', 'updatedAt'])
         && hasValidActiveFlag()
         && optionalString('campusId')
@@ -150,7 +152,7 @@ service cloud.firestore {
         && hasValidCoordinates(request.resource.data.destination)
         && (request.resource.data.routeId == null || request.resource.data.routeId is string)
         && hasActiveRouteReference();
-      allow update: if isAdmin()
+      allow update: if true
         && hasOnlyKeys(['campusId', 'buildingId', 'floorId', 'floor', 'code', 'codeNormalized', 'name', 'description', 'destination', 'routeId', 'active', 'createdAt', 'updatedAt'])
         && hasValidActiveFlag()
         && optionalString('campusId')
@@ -166,7 +168,7 @@ service cloud.firestore {
         && hasValidCoordinates(request.resource.data.destination)
         && (request.resource.data.routeId == null || request.resource.data.routeId is string)
         && hasActiveRouteReference();
-      allow delete: if isAdmin();
+      allow delete: if true;
     }
 
     match /routes/{routeId} {
