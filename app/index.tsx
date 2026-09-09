@@ -40,7 +40,7 @@ export default function HomeScreen() {
         <ActionButton label="Sair" onPress={() => void logout()} variant="secondary" />
         {user?.role === 'ADMIN' ? (
           <ActionButton
-            label="Administrar salas"
+            label="Cadastrar salas"
             onPress={() => router.push('/admin/rooms')}
             variant="primary"
           />
@@ -53,7 +53,9 @@ export default function HomeScreen() {
       {error ? <Text style={styles.error}>{error}</Text> : null}
 
       <View style={styles.listHeader}>
-        <Text style={styles.listTitle}>Salas disponíveis</Text>
+        <Text style={styles.listTitle}>
+          {rooms.length > 0 ? 'Salas disponíveis' : 'Nenhuma sala encontrada'}
+        </Text>
       </View>
 
       <FlatList

@@ -1,12 +1,6 @@
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import {
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { RoomForm } from '../../src/components/RoomForm';
 import { useRooms } from '../../src/hooks/useRooms';
@@ -24,7 +18,7 @@ export default function AdminRoomsScreen() {
 
   return (
     <ScrollView contentContainerStyle={styles.screen}>
-      <View style={styles.headerCard}>
+      <View style={styles.formCard}>
         <View style={styles.headerTopRow}>
           <Pressable
             accessibilityLabel="Voltar"
@@ -35,19 +29,10 @@ export default function AdminRoomsScreen() {
             <Text style={styles.backIcon}>‹</Text>
           </Pressable>
         </View>
-        <View>
-          <Text style={styles.eyebrow}>ADMINISTRAÇÃO</Text>
-          <Text style={styles.title}>Gestão de salas</Text>
-        </View>
-        <Pressable
-          onPress={() => router.push('/admin/routes')}
-          style={({ pressed }) => [styles.primaryButton, pressed && styles.primaryButtonPressed]}
-        >
-          <Text style={styles.primaryButtonText}>Abrir editor de rotas</Text>
-        </Pressable>
-      </View>
 
-      <View style={styles.formCard}>
+        <Text style={styles.eyebrow}>ADMINISTRAÇÃO</Text>
+        <Text style={styles.title}>Gestão de salas</Text>
+
         <RoomForm
           key={editing?.id ?? 'new'}
           initialValue={editing ? inputFromRoom(editing) : undefined}
@@ -67,23 +52,36 @@ export default function AdminRoomsScreen() {
           <View key={room.id} style={styles.roomCard}>
             <View style={styles.roomHeader}>
               <Text style={styles.roomCode}>{room.code}</Text>
-              {!room.active ? <Text style={styles.inactiveTag}>Desativada</Text> : null}
+              {!room.active ? (
+                <Text style={styles.inactiveTag}>Desativada</Text>
+              ) : null}
             </View>
             <Text style={styles.roomName}>{room.name}</Text>
-            <Text style={styles.roomMeta}>Bloco {room.buildingId} • Andar {room.floor}</Text>
+            <Text style={styles.roomMeta}>
+              Bloco {room.buildingId} • Andar {room.floor}
+            </Text>
 
             <View style={styles.roomActions}>
-              <Pressable onPress={() => setEditing(room)} style={styles.secondaryAction}>
+              <Pressable
+                onPress={() => setEditing(room)}
+                style={styles.secondaryAction}
+              >
                 <Text style={styles.secondaryActionText}>Editar</Text>
               </Pressable>
               <Pressable
                 onPress={() => void deactivate(room.id)}
                 disabled={!room.active}
-                style={[styles.secondaryAction, !room.active && styles.disabledAction]}
+                style={[
+                  styles.secondaryAction,
+                  !room.active && styles.disabledAction,
+                ]}
               >
                 <Text style={styles.secondaryActionText}>Desativar</Text>
               </Pressable>
-              <Pressable onPress={() => void remove(room.id)} style={styles.dangerAction}>
+              <Pressable
+                onPress={() => void remove(room.id)}
+                style={styles.dangerAction}
+              >
                 <Text style={styles.dangerActionText}>Excluir</Text>
               </Pressable>
             </View>
@@ -111,13 +109,15 @@ const styles = StyleSheet.create({
   },
   headerTopRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
   },
   backButton: {
-    backgroundColor: '#F1F5F9',
-    borderRadius: 10,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
+    alignItems: 'center',
+    backgroundColor: '#E2E8F0',
+    borderRadius: 22,
+    height: 44,
+    justifyContent: 'center',
+    width: 44,
   },
   backIcon: { color: '#0F172A', fontSize: 32, lineHeight: 36 },
   eyebrow: {

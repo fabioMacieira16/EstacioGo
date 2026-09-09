@@ -20,7 +20,7 @@ export function RoomSearch({ onSearch }: RoomSearchProps) {
         />
         <Pressable
           accessibilityRole="button"
-          onPress={() => onSearch(term)}
+          onPress={() => onSearch(term.trim())}
           style={({ pressed }) => [styles.button, pressed && styles.buttonPressed]}
         >
           <Text style={styles.buttonText}>Pesquisar</Text>

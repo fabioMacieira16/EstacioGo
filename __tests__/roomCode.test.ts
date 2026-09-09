@@ -1,5 +1,5 @@
 import {
-  generateNextRoomCode,
+  generateRoomCode,
   matchesRoomSearch,
   normalizeRoomCode,
   validateRoomInput,
@@ -18,11 +18,10 @@ const validRoom: RoomInput = {
 };
 
 describe('room rules', () => {
-  it('generates the next automatic room code', () => {
-    expect(generateNextRoomCode(['SALA-001', 'F101', 'SALA-009'])).toBe(
-      'SALA-010',
+  it('generates an automatic room code from block and name', () => {
+    expect(generateRoomCode('Bloco F', 'Sala 101')).toBe(
+      'SALA-F101',
     );
-    expect(generateNextRoomCode(['F101'])).toBe('SALA-001');
   });
 
   it('normalizes a room code', () => {

@@ -4,13 +4,17 @@ export function normalizeRoomCode(value: string): string {
   return value.trim().toUpperCase();
 }
 
-export function generateNextRoomCode(existingCodes: string[]): string {
-  const highestNumber = existingCodes.reduce((highest, code) => {
-    const match = normalizeRoomCode(code).match(/^SALA-(\d+)$/);
-    return match ? Math.max(highest, Number(match[1])) : highest;
-  }, 0);
+export function generateRoomCode(buildingId: string, name: string): string {
+  const normalizePart = (value: string, prefix: RegExp) =>
+    value
+      .trim()
+      .replace(prefix, '')
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toUpperCase()
+      .replace(/[^A-Z0-9]/g, '');
 
-  return `SALA-${String(highestNumber + 1).padStart(3, '0')}`;
+  return `SALA-${normalizePart(buildingId, /^BLOCO\s*/i)}${normalizePart(name, /^SALA\s*/i)}`;
 }
 
 export function validateRoomInput(input: RoomInput): void {

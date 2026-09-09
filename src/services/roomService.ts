@@ -14,7 +14,7 @@ import { db } from '../firebase/firestore';
 import type { Room, RoomInput } from '../types/room';
 import {
   matchesRoomSearch,
-  generateNextRoomCode,
+  generateRoomCode,
   normalizeRoomCode,
   validateRoomInput,
 } from '../utils/roomCode';
@@ -60,11 +60,10 @@ export function createRoomService(
     },
 
     async createRoom(input: RoomInput): Promise<string> {
-      const snapshot = await getDocs(rooms);
-      const code = generateNextRoomCode(
-        snapshot.docs.map((item) => (item.data() as Partial<RoomInput>).code ?? ''),
-      );
-      const room = { ...input, code };
+      const room = {
+        ...input,
+        code: generateRoomCode(input.buildingId, input.name),
+      };
       validateRoomInput(room);
       const created = await addDoc(rooms, {
         ...room,
