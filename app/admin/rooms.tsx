@@ -123,13 +123,6 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: '700',
   },
-  logoutButton: {
-    backgroundColor: '#FEF2F2',
-    borderRadius: 10,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-  },
-
   eyebrow: {
     color: '#0F766E',
     fontSize: 11,
