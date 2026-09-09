@@ -1,8 +1,8 @@
 import type { Coordinates } from '../types/coordinates';
 
 export const DEFAULT_MAP_ORIGIN: Coordinates = {
-  latitude: -3.000001,
-  longitude: -38.500001,
+  latitude: -3.766389,
+  longitude: -38.574472,
 };
 
 export const DEFAULT_MAP_REGION = {
