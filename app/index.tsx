@@ -40,7 +40,7 @@ export default function HomeScreen() {
         <ActionButton label="Sair" onPress={() => void logout()} variant="secondary" />
         {user?.role === 'ADMIN' ? (
           <ActionButton
-            label="Cadastrar salas"
+            label="Administrar salas"
             onPress={() => router.push('/admin/rooms')}
             variant="primary"
           />

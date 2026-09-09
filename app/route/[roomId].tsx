@@ -27,9 +27,15 @@ export default function RouteScreen() {
   if (loading) return <ActivityIndicator />;
   if (error || !room) return <Text>{error ?? 'Sala não encontrada.'}</Text>;
 
-  const origin = route?.origin ?? DEFAULT_MAP_ORIGIN;
+  const origin =
+    userLocationState.location ?? route?.origin ?? DEFAULT_MAP_ORIGIN;
   const destination = route?.destination ?? room.destination;
-  const routeCoordinates = route?.coordinates ?? [origin, destination];
+  const routeCoordinates = userLocationState.location
+    ? [origin, destination]
+    : route?.coordinates ?? [origin, destination];
+  const distanceCoordinates = userLocationState.location
+    ? [userLocationState.location, destination]
+    : routeCoordinates;
 
   const locationMessage =
     userLocationState.status === 'permission-denied'
@@ -38,7 +44,9 @@ export default function RouteScreen() {
         ? 'Localização indisponível. A rota cadastrada continua disponível.'
         : userLocationState.status === 'loading'
           ? 'Obtendo localização do dispositivo...'
-          : 'Localização do dispositivo atualizada.';
+          : userLocationState.accuracy
+            ? `Localização atualizada. Precisão aproximada: ${Math.round(userLocationState.accuracy)} m.`
+            : 'Localização do dispositivo atualizada.';
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -64,7 +72,9 @@ export default function RouteScreen() {
       <View style={styles.distancePanel}>
         <Text style={styles.distanceLabel}>DISTÂNCIA APROXIMADA</Text>
         <Text style={styles.distance}>
-          {formatDistance(calculateRouteDistance(routeCoordinates))}
+          {userLocationState.status === 'loading'
+            ? 'Obtendo localização...'
+            : formatDistance(calculateRouteDistance(distanceCoordinates))}
         </Text>
         <Text style={styles.destination}>Destino: {room.name}</Text>
       </View>

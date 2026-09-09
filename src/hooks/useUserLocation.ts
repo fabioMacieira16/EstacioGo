@@ -11,6 +11,7 @@ export type UserLocationStatus =
 
 export type UserLocationState = {
   location?: Coordinates;
+  accuracy?: number;
   status: UserLocationStatus;
 };
 
@@ -25,6 +26,7 @@ export function useUserLocation() {
       if (!mounted) return;
       setState({
         status: 'available',
+        accuracy: result.coords.accuracy ?? undefined,
         location: {
           latitude: result.coords.latitude,
           longitude: result.coords.longitude,
@@ -40,12 +42,12 @@ export function useUserLocation() {
         }
 
         const result = await Location.getCurrentPositionAsync({
-          accuracy: Location.Accuracy.Balanced,
+          accuracy: Location.Accuracy.High,
         });
         updateLocation(result);
         subscription = await Location.watchPositionAsync(
           {
-            accuracy: Location.Accuracy.Balanced,
+            accuracy: Location.Accuracy.High,
             distanceInterval: 5,
             timeInterval: 5000,
           },
