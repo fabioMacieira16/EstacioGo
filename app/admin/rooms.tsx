@@ -25,6 +25,15 @@ export default function AdminRoomsScreen() {
   return (
     <ScrollView contentContainerStyle={styles.screen}>
       <View style={styles.headerCard}>
+        <View style={styles.headerTopRow}>
+          <Pressable
+            accessibilityLabel="Voltar"
+            onPress={() => router.back()}
+            style={styles.backButton}
+          >
+            <Text style={styles.backButtonText}>Voltar</Text>
+          </Pressable>
+        </View>
         <View>
           <Text style={styles.eyebrow}>ADMINISTRAÇÃO</Text>
           <Text style={styles.title}>Gestão de salas</Text>
@@ -99,6 +108,28 @@ const styles = StyleSheet.create({
     gap: 16,
     padding: 20,
   },
+  headerTopRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  backButton: {
+    backgroundColor: '#F1F5F9',
+    borderRadius: 10,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+  },
+  backButtonText: {
+    color: '#334155',
+    fontSize: 13,
+    fontWeight: '700',
+  },
+  logoutButton: {
+    backgroundColor: '#FEF2F2',
+    borderRadius: 10,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+  },
+
   eyebrow: {
     color: '#0F766E',
     fontSize: 11,
