@@ -20,7 +20,7 @@ export function validateRoomInput(input: RoomInput): void {
   if (!input.buildingId.trim()) throw new Error('Bloco é obrigatório.');
   if (!Number.isInteger(input.floor))
     throw new Error('Andar deve ser um número inteiro.');
-  if (!input.description.trim()) throw new Error('Descrição é obrigatória.');
+  //if (!input.description.trim()) throw new Error('Descrição é obrigatória.');
   if (input.routeId !== null && !input.routeId.trim())
     throw new Error('Rota deve ser válida.');
   if (
