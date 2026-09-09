@@ -1,7 +1,6 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import {
   ActivityIndicator,
-  Image,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -27,15 +26,11 @@ export default function RouteScreen() {
   if (loading) return <ActivityIndicator />;
   if (error || !room) return <Text>{error ?? 'Sala não encontrada.'}</Text>;
 
-  const origin =
-    userLocationState.location ?? route?.origin ?? DEFAULT_MAP_ORIGIN;
+  const origin = route?.origin ?? DEFAULT_MAP_ORIGIN;
   const destination = route?.destination ?? room.destination;
-  const routeCoordinates = userLocationState.location
-    ? [origin, destination]
-    : route?.coordinates ?? [origin, destination];
-  const distanceCoordinates = userLocationState.location
-    ? [userLocationState.location, destination]
-    : routeCoordinates;
+  const storedRoute = route?.coordinates ?? [destination];
+  const routeCoordinates = [origin, ...storedRoute.slice(1, -1), destination];
+  const distanceCoordinates = routeCoordinates;
 
   const locationMessage =
     userLocationState.status === 'permission-denied'
@@ -83,6 +78,8 @@ export default function RouteScreen() {
         destination={destination}
         routeCoordinates={routeCoordinates}
         userLocation={userLocationState.location}
+        originFloor={0}
+        destinationFloor={room.floor}
       />
       <Text style={styles.locationStatus}>{locationMessage}</Text>
     </ScrollView>
