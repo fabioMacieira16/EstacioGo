@@ -4,6 +4,15 @@ export function normalizeRoomCode(value: string): string {
   return value.trim().toUpperCase();
 }
 
+export function generateNextRoomCode(existingCodes: string[]): string {
+  const highestNumber = existingCodes.reduce((highest, code) => {
+    const match = normalizeRoomCode(code).match(/^SALA-(\d+)$/);
+    return match ? Math.max(highest, Number(match[1])) : highest;
+  }, 0);
+
+  return `SALA-${String(highestNumber + 1).padStart(3, '0')}`;
+}
+
 export function validateRoomInput(input: RoomInput): void {
   if (!normalizeRoomCode(input.code))
     throw new Error('Código da sala é obrigatório.');

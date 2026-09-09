@@ -90,16 +90,6 @@ export function RoomForm({
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Identificação</Text>
         <View style={styles.row}>
-          <Field label="Código" hint="Ex.: A101" style={styles.codeField}>
-            <TextInput
-              autoCapitalize="characters"
-              placeholder="Código da sala"
-              placeholderTextColor="#94A3B8"
-              style={styles.input}
-              value={value.code}
-              onChangeText={(input) => update('code', input)}
-            />
-          </Field>
           <Field label="Nome" style={styles.nameField}>
             <TextInput
               placeholder="Nome da sala"
@@ -292,8 +282,7 @@ const styles = StyleSheet.create({
   locationButtonText: { color: '#0F766E', fontSize: 13, fontWeight: '700' },
   row: { flexDirection: 'row', flexWrap: 'wrap', gap: 12 },
   field: { flex: 1, gap: 7, minWidth: 140 },
-  codeField: { flexGrow: 0.7 },
-  nameField: { flexGrow: 1.3 },
+  nameField: { flexGrow: 1 },
   halfField: { minWidth: 120 },
   labelRow: { alignItems: 'baseline', flexDirection: 'row', gap: 7 },
   label: { color: '#334155', fontSize: 12, fontWeight: '700' },
