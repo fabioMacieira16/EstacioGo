@@ -85,13 +85,6 @@ export default function RouteScreen() {
         userLocation={userLocationState.location}
       />
       <Text style={styles.locationStatus}>{locationMessage}</Text>
-      <Text style={styles.floorPlanTitle}>Referência da planta</Text>
-      <Image
-        source={require('../../Documentation/mapa_da_faculdade.jpeg')}
-        style={styles.floorPlan}
-        resizeMode="contain"
-        accessibilityLabel="Planta baixa da faculdade"
-      />
     </ScrollView>
   );
 }
