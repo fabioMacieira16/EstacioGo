@@ -29,8 +29,13 @@ export default function RoomDetailsScreen() {
       <View style={styles.centeredState}>
         <Text style={styles.errorTitle}>Não foi possível encontrar a sala</Text>
         <Text style={styles.stateText}>{error ?? 'Sala não encontrada.'}</Text>
-        <Pressable onPress={() => router.back()} style={styles.secondaryButton}>
-          <Text style={styles.secondaryButtonText}>Voltar</Text>
+        <Pressable
+          accessibilityLabel="Voltar"
+          accessibilityRole="button"
+          onPress={() => router.back()}
+          style={styles.backButton}
+        >
+          <Text style={styles.backIcon}>‹</Text>
         </Pressable>
       </View>
     );
@@ -200,13 +205,4 @@ const styles = StyleSheet.create({
   },
   primaryButtonPressed: { opacity: 0.9 },
   primaryButtonText: { color: '#FFFFFF', fontSize: 14, fontWeight: '800' },
-  secondaryButton: {
-    borderColor: '#CBD5E1',
-    borderRadius: 10,
-    borderWidth: 1,
-    marginTop: 8,
-    paddingHorizontal: 22,
-    paddingVertical: 12,
-  },
-  secondaryButtonText: { color: '#334155', fontSize: 14, fontWeight: '700' },
 });

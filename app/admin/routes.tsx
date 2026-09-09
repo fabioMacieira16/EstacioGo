@@ -14,10 +14,11 @@ export default function AdminRoutesScreen() {
           <View />
           <Pressable
             accessibilityLabel="Voltar"
+            accessibilityRole="button"
             onPress={() => router.back()}
             style={styles.backButton}
           >
-            <Text style={styles.backButtonText}>Voltar</Text>
+            <Text style={styles.backIcon}>‹</Text>
           </Pressable>
         </View>
         <Text style={styles.eyebrow}>ADMINISTRAÇÃO</Text>
@@ -61,16 +62,14 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   backButton: {
+    alignItems: 'center',
     backgroundColor: '#F1F5F9',
-    borderRadius: 10,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
+    borderRadius: 22,
+    height: 44,
+    justifyContent: 'center',
+    width: 44,
   },
-  backButtonText: {
-    color: '#334155',
-    fontSize: 13,
-    fontWeight: '700',
-  },
+  backIcon: { color: '#0F172A', fontSize: 32, lineHeight: 36 },
   eyebrow: {
     color: '#0F766E',
     fontSize: 11,

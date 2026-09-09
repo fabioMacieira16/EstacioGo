@@ -82,9 +82,6 @@ export default function RouteScreen() {
         resizeMode="contain"
         accessibilityLabel="Planta baixa da faculdade"
       />
-      <Pressable onPress={() => router.back()} style={styles.secondaryButton}>
-        <Text style={styles.secondaryButtonText}>Voltar</Text>
-      </Pressable>
     </ScrollView>
   );
 }
@@ -125,13 +122,5 @@ const styles = StyleSheet.create({
     height: 300,
     width: '100%',
   },
-  secondaryButton: {
-    alignItems: 'center',
-    borderColor: '#CBD5E1',
-    borderRadius: 6,
-    borderWidth: 1,
-    padding: 14,
-  },
-  secondaryButtonText: { color: '#0F172A', fontSize: 16, fontWeight: '700' },
   locationStatus: { color: '#64748B', fontSize: 13, lineHeight: 19 },
 });

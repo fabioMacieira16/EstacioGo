@@ -28,10 +28,11 @@ export default function AdminRoomsScreen() {
         <View style={styles.headerTopRow}>
           <Pressable
             accessibilityLabel="Voltar"
+            accessibilityRole="button"
             onPress={() => router.back()}
             style={styles.backButton}
           >
-            <Text style={styles.backButtonText}>Voltar</Text>
+            <Text style={styles.backIcon}>‹</Text>
           </Pressable>
         </View>
         <View>
@@ -118,11 +119,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 8,
   },
-  backButtonText: {
-    color: '#334155',
-    fontSize: 13,
-    fontWeight: '700',
-  },
+  backIcon: { color: '#0F172A', fontSize: 32, lineHeight: 36 },
   eyebrow: {
     color: '#0F766E',
     fontSize: 11,
