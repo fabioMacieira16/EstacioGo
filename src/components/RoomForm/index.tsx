@@ -9,6 +9,7 @@ import {
   View,
 } from 'react-native';
 
+import { useUserLocation } from '../../hooks/useUserLocation';
 import type { RoomInput } from '../../types/room';
 
 type RoomFormProps = {
@@ -33,6 +34,7 @@ export function RoomForm({
   const [value, setValue] = useState(initialValue);
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  const { location, status: locationStatus } = useUserLocation();
   const update = <K extends keyof RoomInput>(
     field: K,
     fieldValue: RoomInput[K],
@@ -53,6 +55,21 @@ export function RoomForm({
       setSaving(false);
     }
   }
+
+  function useCurrentLocation() {
+    if (!location) return;
+    update('destination', location);
+    setError(null);
+  }
+
+  const locationButtonLabel =
+    locationStatus === 'loading'
+      ? 'Localizando dispositivo...'
+      : locationStatus === 'permission-denied'
+        ? 'Permissão de localização negada'
+        : locationStatus === 'unavailable'
+          ? 'Localização indisponível'
+          : 'Usar minha localização atual';
 
   return (
     <View style={styles.container}>
@@ -131,8 +148,21 @@ export function RoomForm({
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Localização no mapa</Text>
         <Text style={styles.sectionHint}>
-          Informe o ponto exato usado para iniciar a rota até a sala.
+          Use sua posição atual para marcar a sala no mapa ou informe os valores manualmente.
         </Text>
+        <Pressable
+          accessibilityRole="button"
+          disabled={!location}
+          onPress={useCurrentLocation}
+          style={({ pressed }) => [
+            styles.locationButton,
+            !location && styles.locationButtonDisabled,
+            pressed && location && styles.locationButtonPressed,
+          ]}
+        >
+          <Text style={styles.locationButtonIcon}>+</Text>
+          <Text style={styles.locationButtonText}>{locationButtonLabel}</Text>
+        </Pressable>
         <View style={styles.row}>
           <Field label="Latitude" style={styles.halfField}>
             <TextInput
@@ -165,15 +195,6 @@ export function RoomForm({
             />
           </Field>
         </View>
-        {/* <Field label="ID da rota" optional>
-          <TextInput
-            placeholder="Informe se a sala já tiver uma rota"
-            placeholderTextColor="#94A3B8"
-            style={styles.input}
-            value={value.routeId ?? ''}
-            onChangeText={(input) => update('routeId', input || null)}
-          />
-        </Field> */}
       </View>
 
       <View style={styles.activeRow}>
@@ -254,6 +275,21 @@ const styles = StyleSheet.create({
   section: { gap: 12 },
   sectionTitle: { color: '#0F172A', fontSize: 15, fontWeight: '800' },
   sectionHint: { color: '#64748B', fontSize: 12, marginTop: -6 },
+  locationButton: {
+    alignItems: 'center',
+    borderColor: '#99F6E4',
+    borderRadius: 10,
+    borderWidth: 1,
+    flexDirection: 'row',
+    gap: 8,
+    justifyContent: 'center',
+    minHeight: 42,
+    paddingHorizontal: 12,
+  },
+  locationButtonDisabled: { opacity: 0.55 },
+  locationButtonPressed: { backgroundColor: '#F0FDFA' },
+  locationButtonIcon: { color: '#0F766E', fontSize: 20 },
+  locationButtonText: { color: '#0F766E', fontSize: 13, fontWeight: '700' },
   row: { flexDirection: 'row', flexWrap: 'wrap', gap: 12 },
   field: { flex: 1, gap: 7, minWidth: 140 },
   codeField: { flexGrow: 0.7 },
