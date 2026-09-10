@@ -44,6 +44,17 @@ service cloud.firestore {
         );
     }
 
+    function hasValidIndoorRoute(indoor) {
+      return indoor is map
+        && indoor.originFloorId is string
+        && indoor.destinationFloorId is string
+        && indoor.pointsByFloor is map
+        && indoor.distanceMeters is number
+        && indoor.distanceMeters >= 0
+        && (!indoor.keys().has('estimatedTimeMinutes')
+          || indoor.estimatedTimeMinutes is number);
+    }
+
     function hasValidActiveFlag() {
       return request.resource.data.active is bool;
     }
@@ -174,17 +185,7 @@ service cloud.firestore {
     match /routes/{routeId} {
       allow read: if isAdmin() || resource.data.active == true;
       allow create: if isAdmin()
-        && hasOnlyKeys(['campusId', 'name', 'origin', 'destination', 'coordinates', 'active', 'createdAt', 'updatedAt'])
-        && hasValidActiveFlag()
-        && request.resource.data.campusId is string
-        && request.resource.data.name is string
-        && hasValidCoordinates(request.resource.data.origin)
-        && hasValidCoordinates(request.resource.data.destination)
-        && hasValidRoutePoints(request.resource.data.coordinates)
-        && request.resource.data.coordinates[0] == request.resource.data.origin
-        && request.resource.data.coordinates[request.resource.data.coordinates.size() - 1] == request.resource.data.destination;
-      allow update: if isAdmin()
-        && hasOnlyKeys(['campusId', 'name', 'origin', 'destination', 'coordinates', 'active', 'createdAt', 'updatedAt'])
+        && hasOnlyKeys(['campusId', 'name', 'origin', 'destination', 'coordinates', 'indoor', 'active', 'createdAt', 'updatedAt'])
         && hasValidActiveFlag()
         && request.resource.data.campusId is string
         && request.resource.data.name is string
@@ -193,6 +194,18 @@ service cloud.firestore {
         && hasValidRoutePoints(request.resource.data.coordinates)
         && request.resource.data.coordinates[0] == request.resource.data.origin
         && request.resource.data.coordinates[request.resource.data.coordinates.size() - 1] == request.resource.data.destination
+        && (!request.resource.data.keys().has('indoor') || hasValidIndoorRoute(request.resource.data.indoor));
+      allow update: if isAdmin()
+        && hasOnlyKeys(['campusId', 'name', 'origin', 'destination', 'coordinates', 'indoor', 'active', 'createdAt', 'updatedAt'])
+        && hasValidActiveFlag()
+        && request.resource.data.campusId is string
+        && request.resource.data.name is string
+        && hasValidCoordinates(request.resource.data.origin)
+        && hasValidCoordinates(request.resource.data.destination)
+        && hasValidRoutePoints(request.resource.data.coordinates)
+        && request.resource.data.coordinates[0] == request.resource.data.origin
+        && request.resource.data.coordinates[request.resource.data.coordinates.size() - 1] == request.resource.data.destination
+        && (!request.resource.data.keys().has('indoor') || hasValidIndoorRoute(request.resource.data.indoor))
         && isUnchanged('createdAt');
       allow delete: if isAdmin();
     }

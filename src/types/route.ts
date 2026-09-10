@@ -1,4 +1,5 @@
 import type { Coordinates } from './coordinates';
+import type { IndoorRoute } from './indoorMap';
 import type { Timestamp } from 'firebase/firestore';
 
 export type RouteInput = {
@@ -7,6 +8,7 @@ export type RouteInput = {
   origin: Coordinates;
   destination: Coordinates;
   coordinates: Coordinates[];
+  indoor?: IndoorRoute;
   active: boolean;
 };
 

@@ -8,29 +8,24 @@ import {
   View,
 } from 'react-native';
 
-import { CampusMap } from '../../src/components/CampusMap';
-import { DEFAULT_MAP_ORIGIN } from '../../src/constants/map';
+import { IndoorMap } from '../../src/components/IndoorMap/IndoorMap';
+import { campusIndoorMap } from '../../src/constants/indoorMap';
 import { useRoute } from '../../src/hooks/useRoute';
 import { useUserLocation } from '../../src/hooks/useUserLocation';
-import {
-  calculateRouteDistance,
-  formatDistance,
-} from '../../src/utils/distance';
 
 export default function RouteScreen() {
   const router = useRouter();
   const { roomId } = useLocalSearchParams<{ roomId: string }>();
-  const { room, route, loading, error } = useRoute(roomId);
+  const { room, loading, error } = useRoute(roomId);
   const userLocationState = useUserLocation();
 
   if (loading) return <ActivityIndicator />;
   if (error || !room) return <Text>{error ?? 'Sala não encontrada.'}</Text>;
 
-  const origin = route?.origin ?? DEFAULT_MAP_ORIGIN;
-  const destination = route?.destination ?? room.destination;
-  const storedRoute = route?.coordinates ?? [destination];
-  const routeCoordinates = [origin, ...storedRoute.slice(1, -1), destination];
-  const distanceCoordinates = routeCoordinates;
+  const indoorRoute = campusIndoorMap.routes[room.code.toLowerCase()];
+  const destinationFloorId =
+    campusIndoorMap.floors.find((floor) => floor.number === room.floor)?.id ??
+    'ground-floor';
 
   const locationMessage =
     userLocationState.status === 'permission-denied'
@@ -65,23 +60,28 @@ export default function RouteScreen() {
         <Text style={styles.detail}>Andar {room.floor}</Text>
       </View>
       <View style={styles.distancePanel}>
-        <Text style={styles.distanceLabel}>DISTÂNCIA APROXIMADA</Text>
+        <Text style={styles.distanceLabel}>DISTÂNCIA INTERNA</Text>
         <Text style={styles.distance}>
-          {userLocationState.status === 'loading'
-            ? 'Obtendo localização...'
-            : formatDistance(calculateRouteDistance(distanceCoordinates))}
+          {indoorRoute ? `${indoorRoute.distanceMeters} m` : 'Rota não cadastrada'}
         </Text>
+        {indoorRoute?.estimatedTimeMinutes ? (
+          <Text style={styles.estimatedTime}>
+            Aproximadamente {indoorRoute.estimatedTimeMinutes} min
+          </Text>
+        ) : null}
         <Text style={styles.destination}>Destino: {room.name}</Text>
       </View>
-      <CampusMap
-        origin={origin}
-        destination={destination}
-        routeCoordinates={routeCoordinates}
-        userLocation={userLocationState.location}
-        originFloor={0}
-        destinationFloor={room.floor}
+      <IndoorMap
+        map={campusIndoorMap}
+        routeKey={room.code.toLowerCase()}
+        destinationFloorId={destinationFloorId}
+        destinationRoomCode={room.code}
       />
-      <Text style={styles.locationStatus}>{locationMessage}</Text>
+      <Text style={styles.locationStatus}>
+        {userLocationState.location
+          ? `${locationMessage} O GPS é auxiliar; a rota interna usa a planta cadastrada.`
+          : `${locationMessage} A navegação funciona pela Entrada Principal mesmo sem GPS.`}
+      </Text>
     </ScrollView>
   );
 }
@@ -111,6 +111,7 @@ const styles = StyleSheet.create({
   },
   distanceLabel: { color: '#CCFBF1', fontSize: 11, fontWeight: '800' },
   distance: { color: '#FFFFFF', fontSize: 28, fontWeight: '800' },
+  estimatedTime: { color: '#CCFBF1', fontSize: 14 },
   destination: { color: '#CCFBF1', fontSize: 14 },
   floorPlanTitle: {
     color: '#0F172A',
