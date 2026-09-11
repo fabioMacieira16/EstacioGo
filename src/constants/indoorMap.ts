@@ -10,6 +10,7 @@ export const campusIndoorMap: IndoorMapData = {
   floors: [
     {
       id: 'ground-floor',
+      buildingId: 'F',
       number: 0,
       label: 'Térreo',
       width: 1000,
@@ -49,6 +50,7 @@ export const campusIndoorMap: IndoorMapData = {
     },
     {
       id: 'first-floor',
+      buildingId: 'F',
       number: 1,
       label: '1º andar',
       width: 1000,

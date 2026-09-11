@@ -4,6 +4,26 @@ const defaultDestination = { latitude: -23.535, longitude: -46.573 };
 
 export const initialRooms: RoomInput[] = [
   {
+    code: 'F101',
+    name: 'Sala F101',
+    buildingId: 'F',
+    floor: 1,
+    description: 'Sala de aula do Bloco F.',
+    destination: defaultDestination,
+    routeId: null,
+    active: true,
+  },
+  {
+    code: 'F102',
+    name: 'Sala F102',
+    buildingId: 'F',
+    floor: 1,
+    description: 'Sala de aula do Bloco F.',
+    destination: defaultDestination,
+    routeId: null,
+    active: true,
+  },
+  {
     code: 'BIBLIOTECA',
     name: 'Biblioteca',
     buildingId: 'A',

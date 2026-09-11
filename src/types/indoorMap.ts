@@ -33,6 +33,7 @@ export type MapWaypoint = {
 
 export type IndoorFloor = {
   id: string;
+  buildingId: string;
   number: number;
   label: string;
   width: number;
@@ -41,6 +42,11 @@ export type IndoorFloor = {
   walls: MapWall[];
   doors: MapDoor[];
   waypoints: MapWaypoint[];
+};
+
+export type IndoorMapDocument = IndoorFloor & {
+  campusId: string;
+  active: boolean;
 };
 
 export type IndoorRoute = {

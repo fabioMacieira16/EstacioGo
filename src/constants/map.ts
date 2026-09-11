@@ -1,5 +1,7 @@
 import type { Coordinates } from '../types/coordinates';
 
+export const DEFAULT_CAMPUS_ID = 'campus-principal';
+
 export const DEFAULT_MAP_ORIGIN: Coordinates = {
   latitude: -3.766389,
   longitude: -38.574472,

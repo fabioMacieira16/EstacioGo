@@ -3,8 +3,13 @@ import { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { RoomForm } from '../../src/components/RoomForm';
+import { DEFAULT_CAMPUS_ID, DEFAULT_MAP_ORIGIN } from '../../src/constants/map';
+import { campusIndoorMap } from '../../src/constants/indoorMap';
 import { initialRooms } from '../../src/constants/initialRooms';
 import { useRooms } from '../../src/hooks/useRooms';
+import { buildingService } from '../../src/services/buildingService';
+import { indoorMapService } from '../../src/services/indoorMapService';
+import { routeService } from '../../src/services/routeService';
 import type { Room } from '../../src/types/room';
 
 export default function AdminRoomsScreen() {
@@ -13,6 +18,8 @@ export default function AdminRoomsScreen() {
     useRooms();
   const [editing, setEditing] = useState<Room | null>(null);
   const [seeding, setSeeding] = useState(false);
+  const [seedingIndoor, setSeedingIndoor] = useState(false);
+  const [seedIndoorError, setSeedIndoorError] = useState<string | null>(null);
   const inputFromRoom = (room: Room) => {
     const { id: _id, ...input } = room;
     return input;
@@ -31,6 +38,51 @@ export default function AdminRoomsScreen() {
       }
     } finally {
       setSeeding(false);
+    }
+  }
+
+  async function seedIndoorDemo() {
+    setSeedingIndoor(true);
+    setSeedIndoorError(null);
+    try {
+      const buildingCode = campusIndoorMap.floors[0]?.buildingId;
+      if (!buildingCode) return;
+
+      const existingBuildings = await buildingService.listBuildings(DEFAULT_CAMPUS_ID);
+      if (!existingBuildings.some((building) => building.code === buildingCode)) {
+        await buildingService.createBuilding({
+          campusId: DEFAULT_CAMPUS_ID,
+          code: buildingCode,
+          name: 'Bloco F',
+          description: 'Planta de demonstração (dados simulados).',
+          active: true,
+        });
+      }
+
+      for (const floor of campusIndoorMap.floors) {
+        await indoorMapService.saveFloor({ ...floor, campusId: DEFAULT_CAMPUS_ID, active: true });
+      }
+
+      const demoRoute = campusIndoorMap.routes.f101;
+      const f101 = rooms.find((room) => room.code === 'F101');
+      if (demoRoute && f101 && !f101.routeId) {
+        const routeId = await routeService.createRoute({
+          campusId: DEFAULT_CAMPUS_ID,
+          name: 'Entrada Principal → F101',
+          origin: DEFAULT_MAP_ORIGIN,
+          destination: DEFAULT_MAP_ORIGIN,
+          coordinates: [DEFAULT_MAP_ORIGIN, DEFAULT_MAP_ORIGIN],
+          indoor: demoRoute,
+          active: true,
+        });
+        await update(f101.id, { ...inputFromRoom(f101), routeId });
+      }
+    } catch (error) {
+      setSeedIndoorError(
+        error instanceof Error ? error.message : 'Não foi possível cadastrar a planta.',
+      );
+    } finally {
+      setSeedingIndoor(false);
     }
   }
 
@@ -61,6 +113,20 @@ export default function AdminRoomsScreen() {
             {seeding ? 'Cadastrando locais...' : 'Cadastrar locais da planta'}
           </Text>
         </Pressable>
+
+        <Pressable
+          accessibilityRole="button"
+          disabled={seedingIndoor}
+          onPress={() => void seedIndoorDemo()}
+          style={[styles.seedButton, seedingIndoor && styles.disabledAction]}
+        >
+          <Text style={styles.seedButtonText}>
+            {seedingIndoor
+              ? 'Cadastrando planta indoor...'
+              : 'Cadastrar planta indoor de demonstração (Bloco F)'}
+          </Text>
+        </Pressable>
+        {seedIndoorError ? <Text style={styles.error}>{seedIndoorError}</Text> : null}
 
         <RoomForm
           key={editing?.id ?? 'new'}

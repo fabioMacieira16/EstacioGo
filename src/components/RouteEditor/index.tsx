@@ -8,7 +8,7 @@ import {
   View,
 } from 'react-native';
 
-import { DEFAULT_MAP_ORIGIN } from '../../constants/map';
+import { DEFAULT_CAMPUS_ID, DEFAULT_MAP_ORIGIN } from '../../constants/map';
 import type { Coordinates } from '../../types/coordinates';
 import type { RouteInput } from '../../types/route';
 import { CampusMap } from '../CampusMap';
@@ -50,7 +50,7 @@ export function RouteEditor({ onSave }: RouteEditorProps) {
       setSaving(true);
       setError(null);
       await onSave({
-        campusId: 'campus-principal',
+        campusId: DEFAULT_CAMPUS_ID,
         name,
         origin,
         destination,

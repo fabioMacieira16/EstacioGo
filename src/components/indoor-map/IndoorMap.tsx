@@ -1,10 +1,10 @@
-import { useEffect, useRef, useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { useMemo, useRef, useState } from 'react';
+import { PanResponder, ScrollView, StyleSheet, View, type GestureResponderEvent } from 'react-native';
 import Svg, { Circle, G, Rect, Text as SvgText } from 'react-native-svg';
 
-import type { IndoorMapData, MapCoordinate, MapRoom } from '../../types/indoorMap';
+import type { IndoorFloor, IndoorRoute, MapCoordinate, MapRoom } from '../../types/indoorMap';
 import { Door } from './Door';
-import { FloorSelector } from './FloorSelector';
+import { FloorBadge } from './FloorBadge';
 import { MapControls } from './MapControls';
 import { MapMarker } from './MapMarker';
 import { RoomShape } from './RoomShape';
@@ -12,45 +12,75 @@ import { RouteLine } from './RouteLine';
 import { Wall } from './Wall';
 
 type IndoorMapProps = {
-  map: IndoorMapData;
-  routeKey: string;
-  destinationFloorId: string;
+  floors: IndoorFloor[];
+  selectedFloorId: string;
+  onSelectFloor: (floorId: string) => void;
+  route: IndoorRoute | null;
   destinationRoomCode: string;
   destinationRoomName?: string;
   userPosition?: MapCoordinate;
   onRoomPress?: (room: MapRoom) => void;
 };
 
+const MIN_SCALE = 0.7;
+const MAX_SCALE = 2.2;
+
+function touchDistance(event: GestureResponderEvent): number {
+  const [first, second] = event.nativeEvent.touches;
+  if (!first || !second) return 0;
+  return Math.hypot(first.pageX - second.pageX, first.pageY - second.pageY);
+}
+
 export function IndoorMap({
-  map,
-  routeKey,
-  destinationFloorId,
+  floors,
+  selectedFloorId,
+  onSelectFloor,
+  route,
   destinationRoomCode,
   destinationRoomName,
   userPosition,
   onRoomPress,
 }: IndoorMapProps) {
-  const route = map.routes[routeKey];
-  const [selectedFloorId, setSelectedFloorId] = useState(destinationFloorId);
   const [selectedRoomId, setSelectedRoomId] = useState<string | null>(null);
   const [scale, setScale] = useState(1);
   const horizontalScroll = useRef<ScrollView | null>(null);
   const verticalScroll = useRef<ScrollView | null>(null);
+  const pinch = useRef({ startDistance: 0, startScale: 1 });
 
-  useEffect(() => {
-    // Keep the visible floor aligned with a new route destination.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setSelectedFloorId(destinationFloorId);
-  }, [destinationFloorId]);
+  const floor = floors.find((item) => item.id === selectedFloorId) ?? floors[0];
 
-  const floor = map.floors.find((item) => item.id === selectedFloorId) ?? map.floors[0];
+  const panResponder = useMemo(
+    () =>
+      // Standard React Native gesture pattern: the pinch bookkeeping ref is only
+      // read inside handlers invoked later by touch events, never during render.
+      // eslint-disable-next-line react-hooks/refs
+      PanResponder.create({
+        // Only take over the gesture for two-finger pinches so the nested
+        // ScrollViews below keep handling single-finger panning normally.
+        onStartShouldSetPanResponderCapture: (event) => event.nativeEvent.touches.length === 2,
+        onMoveShouldSetPanResponderCapture: (event) => event.nativeEvent.touches.length === 2,
+        onPanResponderGrant: (event) => {
+          pinch.current = { startDistance: touchDistance(event), startScale: scale };
+        },
+        onPanResponderMove: (event) => {
+          if (event.nativeEvent.touches.length !== 2 || pinch.current.startDistance === 0) return;
+          const ratio = touchDistance(event) / pinch.current.startDistance;
+          const nextScale = Math.min(MAX_SCALE, Math.max(MIN_SCALE, pinch.current.startScale * ratio));
+          setScale(nextScale);
+        },
+      }),
+    [scale],
+  );
+
+  if (!floor) return null;
+
   const points = route?.pointsByFloor[floor.id] ?? [];
   const destination = floor.rooms.find(
     (room) =>
       room.code === destinationRoomCode ||
       (destinationRoomName && room.name.toLowerCase() === destinationRoomName.toLowerCase()),
   );
-  const isDestinationFloor = floor.id === destinationFloorId;
+  const isDestinationFloor = floor.id === route?.destinationFloorId;
   const isOriginFloor = floor.id === route?.originFloorId;
 
   function centerMap() {
@@ -59,84 +89,77 @@ export function IndoorMap({
   }
 
   return (
-    <View style={styles.container}>
-      <FloorSelector
-        floors={map.floors}
-        selectedFloorId={selectedFloorId}
-        onSelect={setSelectedFloorId}
-      />
-      <View style={styles.mapFrame}>
+    <View style={styles.mapFrame} {...panResponder.panHandlers}>
+      <ScrollView
+        ref={horizontalScroll}
+        horizontal
+        contentContainerStyle={{ width: floor.width * scale }}
+        showsHorizontalScrollIndicator={false}
+      >
         <ScrollView
-          ref={horizontalScroll}
-          horizontal
-          contentContainerStyle={{ width: floor.width * scale }}
-          showsHorizontalScrollIndicator={false}
+          ref={verticalScroll}
+          contentContainerStyle={{ height: floor.height * scale }}
+          showsVerticalScrollIndicator={false}
         >
-          <ScrollView
-            ref={verticalScroll}
-            contentContainerStyle={{ height: floor.height * scale }}
-            showsVerticalScrollIndicator={false}
+          <Svg
+            width={floor.width * scale}
+            height={floor.height * scale}
+            viewBox={`0 0 ${floor.width} ${floor.height}`}
           >
-            <Svg
-              width={floor.width * scale}
-              height={floor.height * scale}
-              viewBox={`0 0 ${floor.width} ${floor.height}`}
-            >
-              <Rect width={floor.width} height={floor.height} fill="#171A1E" />
-              <Rect x={50} y={270} width={820} height={50} fill="#35424A" />
-              <Rect x={330} y={50} width={210} height={570} fill="#35424A" />
-              {floor.rooms.map((room) => (
-                <RoomShape
-                  key={room.id}
-                  room={room}
-                  selected={room.id === selectedRoomId || (selectedRoomId === null && room.code === destinationRoomCode)}
-                  onPress={() => {
-                    setSelectedRoomId(room.id);
-                    onRoomPress?.(room);
-                  }}
-                />
-              ))}
-              {floor.walls.map((wall, index) => <Wall key={`wall-${index}`} wall={wall} />)}
-              {floor.doors.map((door) => <Door key={door.id} door={door} />)}
-              {points.length > 1 ? <RouteLine points={points} /> : null}
-              {isOriginFloor && points[0] ? (
-                <MapMarker position={points[0]} label="Entrada" color="#0F766E" />
-              ) : null}
-              {isDestinationFloor && destination ? (
-                <MapMarker
-                  position={{
-                    x: destination.position.x + destination.width / 2,
-                    y: destination.position.y + destination.height,
-                  }}
-                  label={destination.code}
-                  color="#DC2626"
-                />
-              ) : null}
-              {userPosition && isOriginFloor ? (
-                <MapMarker position={userPosition} label="Você está aqui" color="#F59E0B" />
-              ) : null}
-              {floor.waypoints.map((waypoint) => (
-                <G key={waypoint.id}>
-                  <Circle cx={waypoint.position.x} cy={waypoint.position.y} r={10} fill="#F59E0B" stroke="#FFFFFF" strokeWidth={4} />
-                  <SvgText x={waypoint.position.x} y={waypoint.position.y + 30} fill="#334155" fontSize="14" fontWeight="700" textAnchor="middle">
-                    {waypoint.label}
-                  </SvgText>
-                </G>
-              ))}
-            </Svg>
-          </ScrollView>
+            <Rect width={floor.width} height={floor.height} fill="#171A1E" />
+            <Rect x={50} y={270} width={820} height={50} fill="#35424A" />
+            <Rect x={330} y={50} width={210} height={570} fill="#35424A" />
+            {floor.rooms.map((room) => (
+              <RoomShape
+                key={room.id}
+                room={room}
+                selected={room.id === selectedRoomId || (selectedRoomId === null && room.code === destinationRoomCode)}
+                onPress={() => {
+                  setSelectedRoomId(room.id);
+                  onRoomPress?.(room);
+                }}
+              />
+            ))}
+            {floor.walls.map((wall, index) => <Wall key={`wall-${index}`} wall={wall} />)}
+            {floor.doors.map((door) => <Door key={door.id} door={door} />)}
+            {points.length > 1 ? <RouteLine points={points} /> : null}
+            {isOriginFloor && points[0] ? (
+              <MapMarker position={points[0]} label="Entrada" color="#0F766E" />
+            ) : null}
+            {isDestinationFloor && destination ? (
+              <MapMarker
+                position={{
+                  x: destination.position.x + destination.width / 2,
+                  y: destination.position.y + destination.height,
+                }}
+                label={destination.code}
+                color="#DC2626"
+              />
+            ) : null}
+            {userPosition && isOriginFloor ? (
+              <MapMarker position={userPosition} label="Você está aqui" color="#F59E0B" />
+            ) : null}
+            {floor.waypoints.map((waypoint) => (
+              <G key={waypoint.id}>
+                <Circle cx={waypoint.position.x} cy={waypoint.position.y} r={10} fill="#F59E0B" stroke="#FFFFFF" strokeWidth={4} />
+                <SvgText x={waypoint.position.x} y={waypoint.position.y + 30} fill="#334155" fontSize="14" fontWeight="700" textAnchor="middle">
+                  {waypoint.label}
+                </SvgText>
+              </G>
+            ))}
+          </Svg>
         </ScrollView>
-        <MapControls
-          onZoomIn={() => setScale((current) => Math.min(1.8, current + 0.2))}
-          onZoomOut={() => setScale((current) => Math.max(0.7, current - 0.2))}
-          onCenter={centerMap}
-        />
-      </View>
+      </ScrollView>
+      <FloorBadge floors={floors} selectedFloorId={floor.id} onSelect={onSelectFloor} />
+      <MapControls
+        onZoomIn={() => setScale((current) => Math.min(MAX_SCALE, current + 0.2))}
+        onZoomOut={() => setScale((current) => Math.max(MIN_SCALE, current - 0.2))}
+        onCenter={centerMap}
+      />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { gap: 10 },
-  mapFrame: { backgroundColor: '#171A1E', borderRadius: 16, height: 380, overflow: 'hidden', position: 'relative' },
+  mapFrame: { backgroundColor: '#171A1E', borderRadius: 16, flex: 1, minHeight: 380, overflow: 'hidden', position: 'relative' },
 });

@@ -62,7 +62,9 @@ export function createRoomService(
     async createRoom(input: RoomInput): Promise<string> {
       const room = {
         ...input,
-        code: generateRoomCode(input.buildingId, input.name),
+        code: input.code.trim()
+          ? input.code
+          : generateRoomCode(input.buildingId, input.name),
       };
       validateRoomInput(room);
       const created = await addDoc(rooms, {

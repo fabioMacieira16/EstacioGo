@@ -143,6 +143,37 @@ service cloud.firestore {
       allow delete: if isAdmin();
     }
 
+    match /indoorMaps/{mapId} {
+      allow read: if isAdmin() || resource.data.active == true;
+      allow create: if isAdmin()
+        && hasOnlyKeys(['campusId', 'buildingId', 'number', 'label', 'width', 'height', 'rooms', 'walls', 'doors', 'waypoints', 'active'])
+        && hasValidActiveFlag()
+        && request.resource.data.campusId is string
+        && request.resource.data.buildingId is string
+        && request.resource.data.number is int
+        && request.resource.data.label is string
+        && request.resource.data.width is number
+        && request.resource.data.height is number
+        && request.resource.data.rooms is list
+        && request.resource.data.walls is list
+        && request.resource.data.doors is list
+        && request.resource.data.waypoints is list;
+      allow update: if isAdmin()
+        && hasOnlyKeys(['campusId', 'buildingId', 'number', 'label', 'width', 'height', 'rooms', 'walls', 'doors', 'waypoints', 'active'])
+        && hasValidActiveFlag()
+        && request.resource.data.campusId is string
+        && request.resource.data.buildingId is string
+        && request.resource.data.number is int
+        && request.resource.data.label is string
+        && request.resource.data.width is number
+        && request.resource.data.height is number
+        && request.resource.data.rooms is list
+        && request.resource.data.walls is list
+        && request.resource.data.doors is list
+        && request.resource.data.waypoints is list;
+      allow delete: if isAdmin();
+    }
+
     match /rooms/{roomId} {
       // V1: o app usa uma identidade mock e ainda nao envia Firebase Auth.
       // V2: restaurar isAdmin() quando a autenticacao definitiva existir.
