@@ -9,8 +9,8 @@ export function Wall({ wall }: { wall: MapWall }) {
       y1={wall.start.y}
       x2={wall.end.x}
       y2={wall.end.y}
-      stroke="#1E293B"
-      strokeWidth={12}
+      stroke="#0B0D10"
+      strokeWidth={14}
       strokeLinecap="square"
     />
   );

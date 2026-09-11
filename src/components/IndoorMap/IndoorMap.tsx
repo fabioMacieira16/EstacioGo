@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import Svg, { Circle, G, Rect, Text as SvgText } from 'react-native-svg';
 
 import type { IndoorMapData, MapCoordinate, MapRoom } from '../../types/indoorMap';
@@ -54,15 +54,6 @@ export function IndoorMap({
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <View style={styles.copy}>
-          <Text style={styles.title}>Planta interna</Text>
-          <Text style={styles.subtitle}>
-            {isDestinationFloor ? `Destino: ${destinationRoomCode}` : 'Caminho até a mudança de andar'}
-          </Text>
-        </View>
-        <Text style={styles.distance}>{route ? `${route.distanceMeters} m` : 'Sem rota'}</Text>
-      </View>
       <FloorSelector
         floors={map.floors}
         selectedFloorId={selectedFloorId}
@@ -85,9 +76,9 @@ export function IndoorMap({
               height={floor.height * scale}
               viewBox={`0 0 ${floor.width} ${floor.height}`}
             >
-              <Rect width={floor.width} height={floor.height} fill="#E2E8F0" />
-              <Rect x={50} y={270} width={820} height={50} fill="#F8FAFC" />
-              <Rect x={330} y={50} width={210} height={570} fill="#F8FAFC" />
+              <Rect width={floor.width} height={floor.height} fill="#171A1E" />
+              <Rect x={50} y={270} width={820} height={50} fill="#35424A" />
+              <Rect x={330} y={50} width={210} height={570} fill="#35424A" />
               {floor.rooms.map((room) => (
                 <RoomShape
                   key={room.id}
@@ -135,18 +126,11 @@ export function IndoorMap({
           onCenter={centerMap}
         />
       </View>
-      <Text style={styles.legend}>Azul: rota cadastrada · Vermelho: destino · Verde: entrada · Amarelo: pontos de referência</Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { gap: 12 },
-  header: { alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between' },
-  copy: { flex: 1, gap: 3 },
-  title: { color: '#0F172A', fontSize: 18, fontWeight: '800' },
-  subtitle: { color: '#64748B', fontSize: 13 },
-  distance: { color: '#0F766E', fontSize: 20, fontWeight: '800' },
-  mapFrame: { backgroundColor: '#CBD5E1', borderRadius: 14, height: 430, overflow: 'hidden', position: 'relative' },
-  legend: { color: '#64748B', fontSize: 12, lineHeight: 17 },
+  container: { gap: 10 },
+  mapFrame: { backgroundColor: '#171A1E', borderRadius: 16, height: 380, overflow: 'hidden', position: 'relative' },
 });
