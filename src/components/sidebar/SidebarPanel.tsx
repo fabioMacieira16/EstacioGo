@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import { Modal, Pressable, ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { navigationTheme } from '../../constants/navigationTheme';
 
@@ -14,6 +15,7 @@ type SidebarPanelProps = {
 export function SidebarPanel({ visible, onClose, children }: SidebarPanelProps) {
   const { width } = useWindowDimensions();
   const isWide = width >= SIDEBAR_BREAKPOINT;
+  const insets = useSafeAreaInsets();
 
   if (isWide) {
     return (
@@ -34,7 +36,14 @@ export function SidebarPanel({ visible, onClose, children }: SidebarPanelProps) 
               <Text style={styles.closeText}>Fechar</Text>
             </Pressable>
           </View>
-          <ScrollView contentContainerStyle={styles.drawerContent}>{children}</ScrollView>
+          <ScrollView
+            contentContainerStyle={[
+              styles.drawerContent,
+              { paddingBottom: 18 + insets.bottom },
+            ]}
+          >
+            {children}
+          </ScrollView>
         </View>
       </View>
     </Modal>

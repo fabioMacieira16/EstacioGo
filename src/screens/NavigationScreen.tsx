@@ -8,6 +8,7 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { BuildingSelector } from '../components/sidebar/BuildingSelector';
 import { FloorSelector } from '../components/sidebar/FloorSelector';
@@ -225,13 +226,13 @@ export function NavigationScreen({ roomId, onSelectRoom, onOpenAdmin, onBack }: 
   }
 
   return (
-    <View style={styles.screen}>
+    <SafeAreaView style={styles.screen}>
       <SidebarPanel visible={sidebarOpen} onClose={() => setSidebarOpen(false)}>
         {sidebarContent}
       </SidebarPanel>
 
       <ScrollView contentContainerStyle={styles.main}>{renderMain()}</ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }
 

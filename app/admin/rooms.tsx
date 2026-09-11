@@ -1,6 +1,7 @@
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { RoomForm } from '../../src/components/RoomForm';
 import { DEFAULT_CAMPUS_ID, DEFAULT_MAP_ORIGIN } from '../../src/constants/map';
@@ -88,6 +89,7 @@ export default function AdminRoomsScreen() {
   }
 
   return (
+    <SafeAreaView style={styles.safeArea}>
     <ScrollView contentContainerStyle={styles.screen}>
       <View style={styles.formCard}>
         <View style={styles.headerTopRow}>
@@ -185,12 +187,16 @@ export default function AdminRoomsScreen() {
         ))}
       </View>
     </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  screen: {
+  safeArea: {
     backgroundColor: navigationTheme.sidebarBackground,
+    flex: 1,
+  },
+  screen: {
     gap: 18,
     padding: 20,
     paddingBottom: 32,

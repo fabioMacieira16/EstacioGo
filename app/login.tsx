@@ -9,6 +9,7 @@ import {
   TextInput,
   View,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { navigationTheme } from '../src/constants/navigationTheme';
 import { useAuth } from '../src/hooks/useAuth';
@@ -33,76 +34,78 @@ export default function LoginScreen() {
   };
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      style={styles.screen}
-    >
-      <View style={styles.backgroundGlow} />
-      <View style={styles.backgroundGlowSecondary} />
-      <View style={styles.container}>
-        <View style={styles.card}>
-          <Text style={styles.brandPin}>📍</Text>
-          <Text style={styles.eyebrow}>
-            Campus <Text style={styles.eyebrowAccent}>Route</Text>
-          </Text>
-          <Text style={styles.title}>Entre para encontrar seu caminho.</Text>
-          <Text style={styles.subtitle}>
-            Acesse o fluxo de teste para consultar salas e rotas.
-          </Text>
-          <Text style={styles.testCredentials}>
-            Teste: aluno/aluno ou admin/admin.
-          </Text>
+    <SafeAreaView style={styles.screen}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        style={styles.keyboardAvoider}
+      >
+        <View style={styles.backgroundGlow} />
+        <View style={styles.backgroundGlowSecondary} />
+        <View style={styles.container}>
+          <View style={styles.card}>
+            <Text style={styles.brandPin}>📍</Text>
+            <Text style={styles.eyebrow}>
+              Campus <Text style={styles.eyebrowAccent}>Route</Text>
+            </Text>
+            <Text style={styles.title}>Entre para encontrar seu caminho.</Text>
+            <Text style={styles.subtitle}>
+              Acesse o fluxo de teste para consultar salas e rotas.
+            </Text>
+            <Text style={styles.testCredentials}>
+              Teste: aluno/aluno ou admin/admin.
+            </Text>
 
-          <View style={styles.inputGroup}>
-            <Text style={styles.inputLabel}>Usuário</Text>
-            <TextInput
-              autoCapitalize="none"
-              autoComplete="username"
-              onChangeText={setEmail}
-              placeholder="Usuário dsdsds"
-              placeholderTextColor="#94A3B8"
-              style={styles.input}
-              value={email}
-            />
+            <View style={styles.inputGroup}>
+              <Text style={styles.inputLabel}>Usuário</Text>
+              <TextInput
+                autoCapitalize="none"
+                autoComplete="username"
+                onChangeText={setEmail}
+                placeholder="Usuário"
+                placeholderTextColor="#94A3B8"
+                style={styles.input}
+                value={email}
+              />
+            </View>
+
+            <View style={styles.inputGroup}>
+              <Text style={styles.inputLabel}>Senha</Text>
+              <TextInput
+                autoCapitalize="none"
+                autoComplete="password"
+                onChangeText={setPassword}
+                placeholder="Senha"
+                placeholderTextColor="#94A3B8"
+                secureTextEntry
+                style={styles.input}
+                value={password}
+              />
+            </View>
+
+            {formError || error ? (
+              <Text style={styles.error}>{formError ?? error}</Text>
+            ) : null}
+
+            <Pressable
+              accessibilityRole="button"
+              disabled={loading}
+              onPress={() => void submit()}
+              style={({ pressed }) => [
+                styles.primaryButton,
+                loading && styles.primaryButtonDisabled,
+                pressed && styles.primaryButtonPressed,
+              ]}
+            >
+              {loading ? (
+                <ActivityIndicator color="#FFFFFF" size="small" />
+              ) : (
+                <Text style={styles.primaryButtonText}>Entrar</Text>
+              )}
+            </Pressable>
           </View>
-
-          <View style={styles.inputGroup}>
-            <Text style={styles.inputLabel}>Senha</Text>
-            <TextInput
-              autoCapitalize="none"
-              autoComplete="password"
-              onChangeText={setPassword}
-              placeholder="Senha"
-              placeholderTextColor="#94A3B8"
-              secureTextEntry
-              style={styles.input}
-              value={password}
-            />
-          </View>
-
-          {formError || error ? (
-            <Text style={styles.error}>{formError ?? error}</Text>
-          ) : null}
-
-          <Pressable
-            accessibilityRole="button"
-            disabled={loading}
-            onPress={() => void submit()}
-            style={({ pressed }) => [
-              styles.primaryButton,
-              loading && styles.primaryButtonDisabled,
-              pressed && styles.primaryButtonPressed,
-            ]}
-          >
-            {loading ? (
-              <ActivityIndicator color="#FFFFFF" size="small" />
-            ) : (
-              <Text style={styles.primaryButtonText}>Entrar</Text>
-            )}
-          </Pressable>
         </View>
-      </View>
-    </KeyboardAvoidingView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
 
@@ -111,6 +114,9 @@ const styles = StyleSheet.create({
     backgroundColor: navigationTheme.sidebarBackground,
     flex: 1,
     position: 'relative',
+  },
+  keyboardAvoider: {
+    flex: 1,
   },
   backgroundGlow: {
     backgroundColor: navigationTheme.accentSoft,

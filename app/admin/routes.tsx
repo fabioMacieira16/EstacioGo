@@ -1,5 +1,6 @@
 import { useRouter } from 'expo-router';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { RouteEditor } from '../../src/components/RouteEditor';
 import { navigationTheme } from '../../src/constants/navigationTheme';
@@ -9,6 +10,7 @@ export default function AdminRoutesScreen() {
   const router = useRouter();
 
   return (
+    <SafeAreaView style={styles.safeArea}>
     <ScrollView contentContainerStyle={styles.screen}>
       <View style={styles.headerCard}>
         <View style={styles.headerTopRow}>
@@ -38,12 +40,16 @@ export default function AdminRoutesScreen() {
         />
       </View>
     </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  screen: {
+  safeArea: {
     backgroundColor: navigationTheme.sidebarBackground,
+    flex: 1,
+  },
+  screen: {
     gap: 18,
     padding: 20,
     paddingBottom: 32,

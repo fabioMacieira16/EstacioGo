@@ -1,6 +1,7 @@
 import { Stack, useRouter, useSegments } from 'expo-router';
-import { ActivityIndicator, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, StatusBar, StyleSheet, View } from 'react-native';
 import { useEffect } from 'react';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { AuthProvider } from '../src/contexts/AuthContext';
 import { navigationTheme } from '../src/constants/navigationTheme';
@@ -28,6 +29,7 @@ function RouteGuard() {
 
   return (
     <View style={styles.root}>
+      <StatusBar barStyle="light-content" />
       <Stack
         screenOptions={{
           headerShown: false,
@@ -45,9 +47,11 @@ function RouteGuard() {
 
 export default function RootLayout() {
   return (
-    <AuthProvider>
-      <RouteGuard />
-    </AuthProvider>
+    <SafeAreaProvider>
+      <AuthProvider>
+        <RouteGuard />
+      </AuthProvider>
+    </SafeAreaProvider>
   );
 }
 
