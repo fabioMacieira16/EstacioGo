@@ -1,5 +1,6 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
+import { navigationTheme } from '../../constants/navigationTheme';
 import type { RecentRoomEntry } from '../../services/recentRoomsService';
 
 type RecentRoomsProps = {
@@ -12,16 +13,17 @@ export function RecentRooms({ rooms, onSelect }: RecentRoomsProps) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Salas recentes</Text>
+      <Text style={styles.title}>🕐 Salas Recentes</Text>
       <View style={styles.list}>
         {rooms.map((room) => (
           <Pressable
             accessibilityRole="button"
             key={room.id}
             onPress={() => onSelect(room)}
-            style={({ pressed }) => [styles.chip, pressed && styles.chipPressed]}
+            style={({ pressed }) => [styles.row, pressed && styles.rowPressed]}
           >
-            <Text style={styles.chipText}>{room.code}</Text>
+            <Text style={styles.rowText}>{room.code}</Text>
+            <Text style={styles.chevron}>›</Text>
           </Pressable>
         ))}
       </View>
@@ -30,15 +32,23 @@ export function RecentRooms({ rooms, onSelect }: RecentRoomsProps) {
 }
 
 const styles = StyleSheet.create({
-  container: { gap: 8 },
-  title: { color: '#334155', fontSize: 12, fontWeight: '800', letterSpacing: 0.6, textTransform: 'uppercase' },
-  list: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  chip: {
-    backgroundColor: '#E0F2FE',
-    borderRadius: 999,
-    paddingHorizontal: 12,
-    paddingVertical: 7,
+  container: { gap: 10 },
+  title: {
+    color: navigationTheme.textPrimary,
+    fontSize: 13,
+    fontWeight: '800',
   },
-  chipPressed: { opacity: 0.8 },
-  chipText: { color: '#0F172A', fontSize: 12, fontWeight: '700' },
+  list: { gap: 6 },
+  row: {
+    alignItems: 'center',
+    backgroundColor: navigationTheme.panelBackground,
+    borderRadius: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 12,
+    paddingVertical: 11,
+  },
+  rowPressed: { opacity: 0.8 },
+  rowText: { color: navigationTheme.textPrimary, fontSize: 13, fontWeight: '700' },
+  chevron: { color: navigationTheme.textSecondary, fontSize: 16, fontWeight: '700' },
 });

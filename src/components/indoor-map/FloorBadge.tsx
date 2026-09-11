@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
+import { navigationTheme } from '../../constants/navigationTheme';
 import type { IndoorFloor } from '../../types/indoorMap';
 
 type FloorBadgeProps = {
@@ -22,7 +23,7 @@ export function FloorBadge({ floors, selectedFloorId, onSelect }: FloorBadgeProp
         onPress={() => setOpen((value) => !value)}
         style={styles.badge}
       >
-        <Text style={styles.badgeText}>🏢 {current.label} ▾</Text>
+        <Text style={styles.badgeText}>🗂 {current.label} ▾</Text>
       </Pressable>
       {open ? (
         <View style={styles.menu}>
@@ -52,29 +53,29 @@ export function FloorBadge({ floors, selectedFloorId, onSelect }: FloorBadgeProp
 const styles = StyleSheet.create({
   container: { left: 14, position: 'absolute', top: 14 },
   badge: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: navigationTheme.sidebarBackground,
     borderRadius: 10,
     paddingHorizontal: 12,
     paddingVertical: 9,
     shadowColor: '#0F172A',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.15,
+    shadowOpacity: 0.25,
     shadowRadius: 6,
   },
-  badgeText: { color: '#0F172A', fontSize: 13, fontWeight: '800' },
+  badgeText: { color: navigationTheme.textPrimary, fontSize: 13, fontWeight: '800' },
   menu: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: navigationTheme.sidebarBackground,
     borderRadius: 10,
     gap: 2,
     marginTop: 6,
     overflow: 'hidden',
     shadowColor: '#0F172A',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.15,
+    shadowOpacity: 0.25,
     shadowRadius: 6,
   },
   menuItem: { paddingHorizontal: 14, paddingVertical: 10 },
-  menuItemActive: { backgroundColor: '#F0FDFA' },
-  menuItemText: { color: '#334155', fontSize: 13, fontWeight: '600' },
-  menuItemTextActive: { color: '#0F766E', fontWeight: '800' },
+  menuItemActive: { backgroundColor: navigationTheme.panelBackground },
+  menuItemText: { color: navigationTheme.textSecondary, fontSize: 13, fontWeight: '600' },
+  menuItemTextActive: { color: navigationTheme.accent, fontWeight: '800' },
 });

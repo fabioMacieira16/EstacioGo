@@ -1,7 +1,8 @@
 import { useMemo, useRef, useState } from 'react';
-import { PanResponder, ScrollView, StyleSheet, View, type GestureResponderEvent } from 'react-native';
-import Svg, { Circle, G, Rect, Text as SvgText } from 'react-native-svg';
+import { PanResponder, Platform, ScrollView, StyleSheet, View, type GestureResponderEvent } from 'react-native';
+import Svg, { G, Rect, Text as SvgText } from 'react-native-svg';
 
+import { navigationTheme } from '../../constants/navigationTheme';
 import type { IndoorFloor, IndoorRoute, MapCoordinate, MapRoom } from '../../types/indoorMap';
 import { Door } from './Door';
 import { FloorBadge } from './FloorBadge';
@@ -88,8 +89,13 @@ export function IndoorMap({
     verticalScroll.current?.scrollTo({ y: 130 * scale, animated: true });
   }
 
+  // PanResponder's responder props aren't consumed correctly by react-native-web
+  // (it logs "Unknown event handler property" for each one). Pinch-to-zoom is
+  // native-only; web/desktop keep the +/- buttons as their zoom control.
+  const pinchHandlers = Platform.OS === 'web' ? {} : panResponder.panHandlers;
+
   return (
-    <View style={styles.mapFrame} {...panResponder.panHandlers}>
+    <View style={styles.mapFrame} {...pinchHandlers}>
       <ScrollView
         ref={horizontalScroll}
         horizontal
@@ -106,9 +112,9 @@ export function IndoorMap({
             height={floor.height * scale}
             viewBox={`0 0 ${floor.width} ${floor.height}`}
           >
-            <Rect width={floor.width} height={floor.height} fill="#171A1E" />
-            <Rect x={50} y={270} width={820} height={50} fill="#35424A" />
-            <Rect x={330} y={50} width={210} height={570} fill="#35424A" />
+            <Rect width={floor.width} height={floor.height} fill={navigationTheme.mapBackground} />
+            <Rect x={50} y={270} width={820} height={50} fill="#E2E8F0" />
+            <Rect x={330} y={50} width={210} height={570} fill="#E2E8F0" />
             {floor.rooms.map((room) => (
               <RoomShape
                 key={room.id}
@@ -124,7 +130,7 @@ export function IndoorMap({
             {floor.doors.map((door) => <Door key={door.id} door={door} />)}
             {points.length > 1 ? <RouteLine points={points} /> : null}
             {isOriginFloor && points[0] ? (
-              <MapMarker position={points[0]} label="Entrada" color="#0F766E" />
+              <MapMarker position={points[0]} label="Entrada" color="#10B981" />
             ) : null}
             {isDestinationFloor && destination ? (
               <MapMarker
@@ -137,12 +143,29 @@ export function IndoorMap({
               />
             ) : null}
             {userPosition && isOriginFloor ? (
-              <MapMarker position={userPosition} label="Você está aqui" color="#F59E0B" />
+              <MapMarker position={userPosition} label="Você está aqui" color={navigationTheme.accent} />
             ) : null}
             {floor.waypoints.map((waypoint) => (
               <G key={waypoint.id}>
-                <Circle cx={waypoint.position.x} cy={waypoint.position.y} r={10} fill="#F59E0B" stroke="#FFFFFF" strokeWidth={4} />
-                <SvgText x={waypoint.position.x} y={waypoint.position.y + 30} fill="#334155" fontSize="14" fontWeight="700" textAnchor="middle">
+                <Rect
+                  x={waypoint.position.x - 14}
+                  y={waypoint.position.y - 14}
+                  width={28}
+                  height={28}
+                  rx={7}
+                  fill="#334155"
+                />
+                <SvgText
+                  x={waypoint.position.x}
+                  y={waypoint.position.y + 5}
+                  fill="#FFFFFF"
+                  fontSize="14"
+                  fontWeight="700"
+                  textAnchor="middle"
+                >
+                  {waypoint.type === 'elevator' ? '⬍' : waypoint.type === 'stairs' ? '⚌' : '•'}
+                </SvgText>
+                <SvgText x={waypoint.position.x} y={waypoint.position.y + 32} fill="#334155" fontSize="13" fontWeight="700" textAnchor="middle">
                   {waypoint.label}
                 </SvgText>
               </G>
@@ -161,5 +184,12 @@ export function IndoorMap({
 }
 
 const styles = StyleSheet.create({
-  mapFrame: { backgroundColor: '#171A1E', borderRadius: 16, flex: 1, minHeight: 380, overflow: 'hidden', position: 'relative' },
+  mapFrame: {
+    backgroundColor: navigationTheme.mapBackground,
+    borderRadius: 16,
+    flex: 1,
+    minHeight: 380,
+    overflow: 'hidden',
+    position: 'relative',
+  },
 });

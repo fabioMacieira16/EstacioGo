@@ -8,16 +8,17 @@ export function RouteLine({ points }: { points: MapCoordinate[] }) {
       <Polyline
         points={points.map((point) => `${point.x},${point.y}`).join(' ')}
         fill="none"
-        stroke="#071317"
-        strokeWidth={24}
+        stroke="#1D4ED8"
+        strokeWidth={20}
         strokeLinecap="round"
         strokeLinejoin="round"
+        opacity={0.25}
       />
       <Polyline
         points={points.map((point) => `${point.x},${point.y}`).join(' ')}
         fill="none"
-        stroke="#42B8D2"
-        strokeWidth={13}
+        stroke="#2563EB"
+        strokeWidth={9}
         strokeLinecap="round"
         strokeLinejoin="round"
       />

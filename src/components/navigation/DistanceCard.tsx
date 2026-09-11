@@ -1,5 +1,7 @@
 import { StyleSheet, Text, View } from 'react-native';
 
+import { navigationTheme } from '../../constants/navigationTheme';
+
 type DistanceCardProps = {
   distanceLabel: string;
   timeLabel?: string;
@@ -8,15 +10,16 @@ type DistanceCardProps = {
 export function DistanceCard({ distanceLabel, timeLabel }: DistanceCardProps) {
   return (
     <View style={styles.card}>
-      <View>
-        <Text style={styles.label}>Distância aproximada</Text>
-        <Text style={styles.value}>{distanceLabel}</Text>
+      <View style={styles.iconBadge}>
+        <Text style={styles.icon}>🧭</Text>
       </View>
-      {timeLabel ? (
-        <View style={styles.timeBadge}>
-          <Text style={styles.timeText}>🚶 {timeLabel}</Text>
+      <View style={styles.copy}>
+        <Text style={styles.label}>Distância aproximada</Text>
+        <View style={styles.valueRow}>
+          <Text style={styles.value}>{distanceLabel}</Text>
+          {timeLabel ? <Text style={styles.time}>🚶 {timeLabel}</Text> : null}
         </View>
-      ) : null}
+      </View>
     </View>
   );
 }
@@ -24,19 +27,27 @@ export function DistanceCard({ distanceLabel, timeLabel }: DistanceCardProps) {
 const styles = StyleSheet.create({
   card: {
     alignItems: 'center',
-    backgroundColor: '#0F766E',
+    backgroundColor: '#FFFFFF',
+    borderColor: '#E2E8F0',
     borderRadius: 16,
+    borderWidth: 1,
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    padding: 16,
+    gap: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
   },
-  label: { color: '#CCFBF1', fontSize: 12, fontWeight: '700' },
-  value: { color: '#FFFFFF', fontSize: 24, fontWeight: '800' },
-  timeBadge: {
-    backgroundColor: 'rgba(255,255,255,0.16)',
+  iconBadge: {
+    alignItems: 'center',
+    backgroundColor: navigationTheme.accent,
     borderRadius: 10,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
+    height: 38,
+    justifyContent: 'center',
+    width: 38,
   },
-  timeText: { color: '#FFFFFF', fontSize: 14, fontWeight: '800' },
+  icon: { fontSize: 18 },
+  copy: { gap: 2 },
+  label: { color: '#64748B', fontSize: 11, fontWeight: '700' },
+  valueRow: { alignItems: 'baseline', flexDirection: 'row', gap: 10 },
+  value: { color: '#0F172A', fontSize: 20, fontWeight: '800' },
+  time: { color: navigationTheme.accent, fontSize: 13, fontWeight: '800' },
 });

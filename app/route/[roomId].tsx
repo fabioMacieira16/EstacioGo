@@ -19,6 +19,7 @@ import { MapLegend } from '../../src/components/indoor-map/MapLegend';
 import { DistanceCard } from '../../src/components/navigation/DistanceCard';
 import { NavigationHeader } from '../../src/components/navigation/NavigationHeader';
 import { NavigationSummary } from '../../src/components/navigation/NavigationSummary';
+import { navigationTheme } from '../../src/constants/navigationTheme';
 import { useIndoorNavigation } from '../../src/hooks/useIndoorNavigation';
 import { useRecentRooms } from '../../src/hooks/useRecentRooms';
 import { useRoute } from '../../src/hooks/useRoute';
@@ -79,8 +80,13 @@ export default function NavigationScreen() {
   const sidebarContent = (
     <>
       <View style={styles.brand}>
-        <Text style={styles.brandTitle}>Campus Route</Text>
-        <Text style={styles.brandSubtitle}>Encontre seu caminho.</Text>
+        <Text style={styles.brandPin}>📍</Text>
+        <View>
+          <Text style={styles.brandTitle}>
+            Campus <Text style={styles.brandTitleAccent}>Route</Text>
+          </Text>
+          <Text style={styles.brandSubtitle}>Encontre seu caminho.</Text>
+        </View>
       </View>
       <SearchRoom onSelect={(selected) => goToRoom(selected.id)} />
       <RecentRooms
@@ -107,13 +113,30 @@ export default function NavigationScreen() {
       </SidebarPanel>
 
       <ScrollView contentContainerStyle={styles.main}>
-        <NavigationHeader
-          roomName={room.name}
-          buildingLabel={selectedBuilding ? `Bloco ${selectedBuilding.code}` : undefined}
-          floorLabel={currentFloor?.label}
-          onBack={() => router.back()}
-          onOpenSidebar={isWide ? undefined : () => setSidebarOpen(true)}
-        />
+        <View style={[styles.headerRow, isWide && styles.headerRowWide]}>
+          <View style={isWide ? styles.headerFlex : undefined}>
+            <NavigationHeader
+              roomName={room.name}
+              buildingLabel={selectedBuilding ? `Bloco ${selectedBuilding.code}` : undefined}
+              floorLabel={currentFloor?.label}
+              onBack={() => router.back()}
+              onOpenSidebar={isWide ? undefined : () => setSidebarOpen(true)}
+            />
+          </View>
+
+          {indoorRoute && hasFloorPlan ? (
+            <View style={isWide ? styles.headerDistance : undefined}>
+              <DistanceCard
+                distanceLabel={formatIndoorDistance(indoorRoute.distanceMeters)}
+                timeLabel={
+                  indoorRoute.estimatedTimeMinutes !== undefined
+                    ? `${indoorRoute.estimatedTimeMinutes} min`
+                    : undefined
+                }
+              />
+            </View>
+          ) : null}
+        </View>
 
         {!room.routeId || !indoorRoute ? (
           <View style={styles.noticeCard}>
@@ -133,15 +156,6 @@ export default function NavigationScreen() {
           </View>
         ) : (
           <>
-            <DistanceCard
-              distanceLabel={formatIndoorDistance(indoorRoute.distanceMeters)}
-              timeLabel={
-                indoorRoute.estimatedTimeMinutes !== undefined
-                  ? `${indoorRoute.estimatedTimeMinutes} min`
-                  : undefined
-              }
-            />
-
             <IndoorMap
               floors={floors}
               selectedFloorId={selectedFloorId ?? floors[0].id}
@@ -181,9 +195,15 @@ const styles = StyleSheet.create({
     padding: 24,
   },
   errorTitle: { color: '#0F172A', fontSize: 16, fontWeight: '700', textAlign: 'center' },
-  brand: { gap: 2 },
-  brandTitle: { color: '#0F172A', fontSize: 20, fontWeight: '800' },
-  brandSubtitle: { color: '#64748B', fontSize: 13 },
+  headerRow: { gap: 14 },
+  headerRowWide: { alignItems: 'center', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' },
+  headerFlex: { flexGrow: 1, flexShrink: 1, minWidth: 260 },
+  headerDistance: { flexShrink: 0, width: 240 },
+  brand: { alignItems: 'center', flexDirection: 'row', gap: 10 },
+  brandPin: { fontSize: 22 },
+  brandTitle: { color: navigationTheme.textPrimary, fontSize: 19, fontWeight: '800' },
+  brandTitleAccent: { color: navigationTheme.accent },
+  brandSubtitle: { color: navigationTheme.textSecondary, fontSize: 12 },
   noticeCard: {
     backgroundColor: '#FFFBEB',
     borderColor: '#FDE68A',

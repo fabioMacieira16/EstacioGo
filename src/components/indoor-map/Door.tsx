@@ -10,7 +10,7 @@ export function Door({ door }: { door: MapDoor }) {
       y1={door.position.y - (horizontal ? 0 : 22)}
       x2={door.position.x + (horizontal ? 22 : 0)}
       y2={door.position.y + (horizontal ? 0 : 22)}
-      stroke="#8B9498"
+      stroke="#EEF2F7"
       strokeWidth={12}
     />
   );

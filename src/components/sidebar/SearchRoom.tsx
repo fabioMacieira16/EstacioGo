@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { FlatList, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
+import { navigationTheme } from '../../constants/navigationTheme';
 import { useRoomSearch } from '../../hooks/useRoomSearch';
 import type { Room } from '../../types/room';
 
@@ -94,7 +95,7 @@ const styles = StyleSheet.create({
     marginBottom: 6,
     padding: 10,
   },
-  resultItemPressed: { backgroundColor: '#F0FDFA' },
-  resultCode: { color: '#0F766E', fontSize: 12, fontWeight: '800' },
+  resultItemPressed: { backgroundColor: '#EFF6FF' },
+  resultCode: { color: navigationTheme.accent, fontSize: 12, fontWeight: '800' },
   resultName: { color: '#0F172A', fontSize: 13, fontWeight: '600' },
 });

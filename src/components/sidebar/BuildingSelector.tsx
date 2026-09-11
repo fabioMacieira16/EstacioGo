@@ -1,5 +1,6 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
+import { navigationTheme } from '../../constants/navigationTheme';
 import type { Building } from '../../types/building';
 
 type BuildingSelectorProps = {
@@ -13,8 +14,8 @@ export function BuildingSelector({ buildings, selectedBuildingId, onSelect }: Bu
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Blocos</Text>
-      <View style={styles.list}>
+      <Text style={styles.title}>🏢 Blocos</Text>
+      <View style={styles.grid}>
         {buildings.map((building) => {
           const active = building.code === selectedBuildingId;
           return (
@@ -30,7 +31,9 @@ export function BuildingSelector({ buildings, selectedBuildingId, onSelect }: Bu
                   {building.code}
                 </Text>
               </View>
-              <Text style={[styles.name, active && styles.activeName]}>{building.name}</Text>
+              <Text style={[styles.name, active && styles.activeName]} numberOfLines={1}>
+                Bloco {building.code}
+              </Text>
             </Pressable>
           );
         })}
@@ -40,30 +43,32 @@ export function BuildingSelector({ buildings, selectedBuildingId, onSelect }: Bu
 }
 
 const styles = StyleSheet.create({
-  container: { gap: 8 },
-  title: { color: '#334155', fontSize: 12, fontWeight: '800', letterSpacing: 0.6, textTransform: 'uppercase' },
-  list: { gap: 6 },
+  container: { gap: 10 },
+  title: { color: navigationTheme.textPrimary, fontSize: 13, fontWeight: '800' },
+  grid: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   item: {
     alignItems: 'center',
-    backgroundColor: '#F8FAFC',
+    backgroundColor: navigationTheme.panelBackground,
     borderRadius: 10,
+    flexBasis: '47%',
     flexDirection: 'row',
-    gap: 10,
+    flexGrow: 1,
+    gap: 8,
     paddingHorizontal: 10,
-    paddingVertical: 9,
+    paddingVertical: 10,
   },
-  activeItem: { backgroundColor: '#0F766E' },
+  activeItem: { backgroundColor: navigationTheme.accent },
   badge: {
     alignItems: 'center',
-    backgroundColor: '#E2E8F0',
+    backgroundColor: navigationTheme.sidebarBackground,
     borderRadius: 6,
     height: 26,
     justifyContent: 'center',
     width: 26,
   },
-  activeBadge: { backgroundColor: '#FFFFFF' },
-  badgeText: { color: '#334155', fontSize: 12, fontWeight: '800' },
-  activeBadgeText: { color: '#0F766E' },
-  name: { color: '#334155', fontSize: 13, fontWeight: '700' },
-  activeName: { color: '#FFFFFF' },
+  activeBadge: { backgroundColor: navigationTheme.textOnAccent },
+  badgeText: { color: navigationTheme.textPrimary, fontSize: 12, fontWeight: '800' },
+  activeBadgeText: { color: navigationTheme.accent },
+  name: { color: navigationTheme.textSecondary, fontSize: 12, fontWeight: '700' },
+  activeName: { color: navigationTheme.textOnAccent },
 });

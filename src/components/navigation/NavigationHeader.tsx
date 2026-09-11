@@ -1,5 +1,7 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
+import { navigationTheme } from '../../constants/navigationTheme';
+
 type NavigationHeaderProps = {
   roomName: string;
   buildingLabel?: string;
@@ -63,5 +65,5 @@ const styles = StyleSheet.create({
   copy: { flex: 1, gap: 3 },
   eyebrow: { color: '#64748B', fontSize: 11, fontWeight: '800' },
   title: { color: '#0F172A', fontSize: 22, fontWeight: '800' },
-  location: { color: '#0F766E', fontSize: 13, fontWeight: '700' },
+  location: { color: navigationTheme.accent, fontSize: 13, fontWeight: '700' },
 });
