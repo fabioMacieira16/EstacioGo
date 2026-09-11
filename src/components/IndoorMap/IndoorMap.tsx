@@ -16,6 +16,7 @@ type IndoorMapProps = {
   routeKey: string;
   destinationFloorId: string;
   destinationRoomCode: string;
+  destinationRoomName?: string;
   userPosition?: MapCoordinate;
   onRoomPress?: (room: MapRoom) => void;
 };
@@ -25,6 +26,7 @@ export function IndoorMap({
   routeKey,
   destinationFloorId,
   destinationRoomCode,
+  destinationRoomName,
   userPosition,
   onRoomPress,
 }: IndoorMapProps) {
@@ -43,7 +45,11 @@ export function IndoorMap({
 
   const floor = map.floors.find((item) => item.id === selectedFloorId) ?? map.floors[0];
   const points = route?.pointsByFloor[floor.id] ?? [];
-  const destination = floor.rooms.find((room) => room.code === destinationRoomCode);
+  const destination = floor.rooms.find(
+    (room) =>
+      room.code === destinationRoomCode ||
+      (destinationRoomName && room.name.toLowerCase() === destinationRoomName.toLowerCase()),
+  );
   const isDestinationFloor = floor.id === destinationFloorId;
   const isOriginFloor = floor.id === route?.originFloorId;
 

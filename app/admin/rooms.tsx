@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { RoomForm } from '../../src/components/RoomForm';
+import { initialRooms } from '../../src/constants/initialRooms';
 import { useRooms } from '../../src/hooks/useRooms';
 import type { Room } from '../../src/types/room';
 
@@ -11,10 +12,27 @@ export default function AdminRoomsScreen() {
   const { rooms, loading, error, create, update, deactivate, remove } =
     useRooms();
   const [editing, setEditing] = useState<Room | null>(null);
+  const [seeding, setSeeding] = useState(false);
   const inputFromRoom = (room: Room) => {
     const { id: _id, ...input } = room;
     return input;
   };
+
+  async function seedCampusLocations() {
+    setSeeding(true);
+    try {
+      const existingNames = new Set(
+        rooms.map((room) => room.name.trim().toLowerCase()),
+      );
+      for (const room of initialRooms) {
+        if (!existingNames.has(room.name.trim().toLowerCase())) {
+          await create(room);
+        }
+      }
+    } finally {
+      setSeeding(false);
+    }
+  }
 
   return (
     <ScrollView contentContainerStyle={styles.screen}>
@@ -32,6 +50,17 @@ export default function AdminRoomsScreen() {
 
         <Text style={styles.eyebrow}>ADMINISTRAÇÃO</Text>
         <Text style={styles.title}>Gestão de salas</Text>
+
+        <Pressable
+          accessibilityRole="button"
+          disabled={seeding}
+          onPress={() => void seedCampusLocations()}
+          style={[styles.seedButton, seeding && styles.disabledAction]}
+        >
+          <Text style={styles.seedButtonText}>
+            {seeding ? 'Cadastrando locais...' : 'Cadastrar locais da planta'}
+          </Text>
+        </Pressable>
 
         <RoomForm
           key={editing?.id ?? 'new'}
@@ -146,6 +175,14 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '700',
   },
+  seedButton: {
+    backgroundColor: '#E0F2FE',
+    borderRadius: 10,
+    marginBottom: 16,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+  },
+  seedButtonText: { color: '#0369A1', fontSize: 13, fontWeight: '800' },
   formCard: {
     backgroundColor: '#FFFFFF',
     borderColor: '#E2E8F0',

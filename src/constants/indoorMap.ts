@@ -17,7 +17,16 @@ export const campusIndoorMap: IndoorMapData = {
       rooms: [
         { id: 'reception', code: 'RECEPÇÃO', name: 'Recepção', position: { x: 45, y: 545 }, width: 180, height: 80, accessible: true },
         { id: 'library-ground', code: 'BIBLIOTECA', name: 'Biblioteca', position: { x: 70, y: 85 }, width: 260, height: 120, accessible: true },
-        { id: 'common-ground', code: 'HUB', name: 'Área comum', position: { x: 600, y: 85 }, width: 260, height: 120, accessible: true },
+        { id: 'health-ground', code: 'CONSULTORIO-SAUDE', name: 'Consultório de Saúde', position: { x: 70, y: 340 }, width: 260, height: 90, accessible: true },
+        { id: 'sep-ground', code: 'SEP', name: 'SEP', position: { x: 70, y: 455 }, width: 180, height: 70, accessible: true },
+        { id: 'secretary-ground', code: 'SECRETARIA-ALUNOS', name: 'Secretaria de Alunos', position: { x: 270, y: 540 }, width: 210, height: 85, accessible: true },
+        { id: 'coordination-ground', code: 'COORD-CURSOS', name: 'Coordenação de Cursos', position: { x: 560, y: 85 }, width: 300, height: 95, accessible: true },
+        { id: 'npi-ground', code: 'NPI', name: 'NPI', position: { x: 560, y: 185 }, width: 150, height: 65, accessible: true },
+        { id: 'naf-ground', code: 'NAF-PROJETE', name: 'NAF-Projete', position: { x: 720, y: 185 }, width: 140, height: 65, accessible: true },
+        { id: 'hub-ground', code: 'HUB', name: 'HUB', position: { x: 610, y: 430 }, width: 120, height: 70, accessible: true },
+        { id: 'wc-ground', code: 'WC', name: 'WC', position: { x: 740, y: 430 }, width: 75, height: 70, accessible: true },
+        { id: 'family-wc-ground', code: 'WC-FAMILIA', name: 'WC Família', position: { x: 820, y: 430 }, width: 70, height: 70, accessible: true },
+        { id: 'registry-ground', code: 'SALA-MATRICULA', name: 'Sala de Matrícula', position: { x: 730, y: 540 }, width: 160, height: 85, accessible: true },
       ],
       walls: [
         { start: { x: 35, y: 35 }, end: { x: 900, y: 35 } },

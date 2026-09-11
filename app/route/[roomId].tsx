@@ -50,6 +50,7 @@ export default function RouteScreen() {
         routeKey={room.code.toLowerCase()}
         destinationFloorId={destinationFloorId}
         destinationRoomCode={room.code}
+        destinationRoomName={room.name}
       />
     </ScrollView>
   );
