@@ -8,10 +8,6 @@ export function useRoomSearch() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    void loadFeaturedRooms();
-  }, []);
-
   async function loadFeaturedRooms() {
     setLoading(true);
     setError(null);
@@ -25,6 +21,12 @@ export function useRoomSearch() {
       setLoading(false);
     }
   }
+
+  useEffect(() => {
+    // Load the initial catalog from the external room service.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    void loadFeaturedRooms();
+  }, []);
 
   async function search(term: string) {
     setLoading(true);

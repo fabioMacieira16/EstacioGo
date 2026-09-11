@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import Svg, { Circle, G, Rect, Text as SvgText } from 'react-native-svg';
 
-import type { IndoorFloor, IndoorMapData, MapCoordinate, MapRoom } from '../../types/indoorMap';
+import type { IndoorMapData, MapCoordinate, MapRoom } from '../../types/indoorMap';
 import { Door } from './Door';
 import { FloorSelector } from './FloorSelector';
 import { MapControls } from './MapControls';
@@ -36,6 +36,8 @@ export function IndoorMap({
   const verticalScroll = useRef<ScrollView | null>(null);
 
   useEffect(() => {
+    // Keep the visible floor aligned with a new route destination.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setSelectedFloorId(destinationFloorId);
   }, [destinationFloorId]);
 
