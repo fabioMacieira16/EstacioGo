@@ -2,6 +2,7 @@ import { useRouter } from 'expo-router';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { RouteEditor } from '../../src/components/RouteEditor';
+import { navigationTheme } from '../../src/constants/navigationTheme';
 import { routeService } from '../../src/services/routeService';
 
 export default function AdminRoutesScreen() {
@@ -42,14 +43,14 @@ export default function AdminRoutesScreen() {
 
 const styles = StyleSheet.create({
   screen: {
-    backgroundColor: '#F8FAFC',
+    backgroundColor: navigationTheme.sidebarBackground,
     gap: 18,
     padding: 20,
     paddingBottom: 32,
   },
   headerCard: {
-    backgroundColor: '#FFFFFF',
-    borderColor: '#E2E8F0',
+    backgroundColor: navigationTheme.panelBackground,
+    borderColor: navigationTheme.panelBorder,
     borderRadius: 24,
     borderWidth: 1,
     gap: 6,
@@ -63,33 +64,33 @@ const styles = StyleSheet.create({
   },
   backButton: {
     alignItems: 'center',
-    backgroundColor: '#F1F5F9',
+    backgroundColor: navigationTheme.sidebarBackground,
     borderRadius: 22,
     height: 44,
     justifyContent: 'center',
     width: 44,
   },
-  backIcon: { color: '#0F172A', fontSize: 32, lineHeight: 36 },
+  backIcon: { color: navigationTheme.textPrimary, fontSize: 32, lineHeight: 36 },
   eyebrow: {
-    color: '#0F766E',
+    color: navigationTheme.accent,
     fontSize: 11,
     fontWeight: '800',
     letterSpacing: 1.4,
   },
   title: {
-    color: '#0F172A',
+    color: navigationTheme.textPrimary,
     fontSize: 28,
     fontWeight: '800',
   },
   subtitle: {
-    color: '#64748B',
+    color: navigationTheme.textSecondary,
     fontSize: 13,
     lineHeight: 19,
     marginTop: 4,
   },
   editorCard: {
-    backgroundColor: '#FFFFFF',
-    borderColor: '#E2E8F0',
+    backgroundColor: navigationTheme.panelBackground,
+    borderColor: navigationTheme.panelBorder,
     borderRadius: 18,
     borderWidth: 1,
     padding: 16,

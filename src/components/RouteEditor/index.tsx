@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 
 import { DEFAULT_CAMPUS_ID, DEFAULT_MAP_ORIGIN } from '../../constants/map';
+import { navigationTheme } from '../../constants/navigationTheme';
 import type { Coordinates } from '../../types/coordinates';
 import type { RouteInput } from '../../types/route';
 import { CampusMap } from '../CampusMap';
@@ -184,37 +185,37 @@ function ActionButton({ label, onPress, variant }: { label: string; onPress: () 
 
 const styles = StyleSheet.create({
   container: { gap: 18 },
-  sectionTitle: { color: '#0F172A', fontSize: 15, fontWeight: '800' },
+  sectionTitle: { color: navigationTheme.textPrimary, fontSize: 15, fontWeight: '800' },
   input: {
-    backgroundColor: '#F8FAFC', borderColor: '#CBD5E1', borderRadius: 10,
+    backgroundColor: '#FFFFFF', borderColor: navigationTheme.panelBorder, borderRadius: 10,
     borderWidth: 1, color: '#0F172A', fontSize: 14, minHeight: 44,
     paddingHorizontal: 12, paddingVertical: 10,
   },
   mapSection: { gap: 12 },
   mapHeader: { alignItems: 'flex-start', flexDirection: 'row', gap: 12, justifyContent: 'space-between' },
   mapCopy: { flex: 1, gap: 4 },
-  helperText: { color: '#64748B', fontSize: 12, lineHeight: 17 },
-  pointCount: { color: '#0F766E', fontSize: 12, fontWeight: '800' },
+  helperText: { color: navigationTheme.textSecondary, fontSize: 12, lineHeight: 17 },
+  pointCount: { color: navigationTheme.accent, fontSize: 12, fontWeight: '800' },
   modeRow: { flexDirection: 'row', gap: 8 },
-  modeButton: { backgroundColor: '#F1F5F9', borderRadius: 9, flex: 1, paddingVertical: 10 },
-  activeModeButton: { backgroundColor: '#CCFBF1' },
-  modeButtonText: { color: '#475569', fontSize: 12, fontWeight: '700', textAlign: 'center' },
-  activeModeButtonText: { color: '#0F766E' },
-  modeStatus: { color: '#64748B', fontSize: 12 },
+  modeButton: { backgroundColor: navigationTheme.sidebarBackground, borderRadius: 9, flex: 1, paddingVertical: 10 },
+  activeModeButton: { backgroundColor: navigationTheme.accent },
+  modeButtonText: { color: navigationTheme.textSecondary, fontSize: 12, fontWeight: '700', textAlign: 'center' },
+  activeModeButtonText: { color: navigationTheme.textOnAccent },
+  modeStatus: { color: navigationTheme.textSecondary, fontSize: 12 },
   pointsSection: { gap: 10 },
-  pointRow: { alignItems: 'center', backgroundColor: '#F8FAFC', borderColor: '#E2E8F0', borderRadius: 10, borderWidth: 1, flexDirection: 'row', gap: 10, justifyContent: 'space-between', padding: 10 },
+  pointRow: { alignItems: 'center', backgroundColor: navigationTheme.sidebarBackground, borderColor: navigationTheme.panelBorder, borderRadius: 10, borderWidth: 1, flexDirection: 'row', gap: 10, justifyContent: 'space-between', padding: 10 },
   pointCopy: { flex: 1, gap: 3 },
-  pointName: { color: '#0F172A', fontSize: 13, fontWeight: '700' },
-  coordinates: { color: '#64748B', fontSize: 11 },
+  pointName: { color: navigationTheme.textPrimary, fontSize: 13, fontWeight: '700' },
+  coordinates: { color: navigationTheme.textSecondary, fontSize: 11 },
   actionButton: { borderRadius: 8, paddingHorizontal: 10, paddingVertical: 8 },
-  dangerButton: { backgroundColor: '#FEE2E2' },
-  mutedButton: { backgroundColor: '#F1F5F9' },
+  dangerButton: { backgroundColor: 'rgba(248, 113, 113, 0.16)' },
+  mutedButton: { backgroundColor: navigationTheme.sidebarBackground },
   actionText: { fontSize: 12, fontWeight: '700' },
-  dangerText: { color: '#B91C1C' },
-  mutedText: { color: '#475569' },
+  dangerText: { color: '#F87171' },
+  mutedText: { color: navigationTheme.textSecondary },
   footerActions: { flexDirection: 'row', gap: 10 },
-  saveButton: { alignItems: 'center', backgroundColor: '#0F766E', borderRadius: 10, flex: 1, justifyContent: 'center', minHeight: 44 },
-  saveText: { color: '#FFFFFF', fontSize: 14, fontWeight: '800' },
+  saveButton: { alignItems: 'center', backgroundColor: navigationTheme.accent, borderRadius: 10, flex: 1, justifyContent: 'center', minHeight: 44 },
+  saveText: { color: navigationTheme.textOnAccent, fontSize: 14, fontWeight: '800' },
   disabledButton: { opacity: 0.7 },
   pressedButton: { opacity: 0.9 },
 });

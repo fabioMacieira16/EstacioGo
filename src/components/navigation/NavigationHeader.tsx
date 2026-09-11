@@ -6,7 +6,7 @@ type NavigationHeaderProps = {
   roomName: string;
   buildingLabel?: string;
   floorLabel?: string;
-  onBack: () => void;
+  onBack?: () => void;
   onOpenSidebar?: () => void;
 };
 
@@ -19,14 +19,16 @@ export function NavigationHeader({
 }: NavigationHeaderProps) {
   return (
     <View style={styles.header}>
-      <Pressable
-        accessibilityLabel="Voltar"
-        accessibilityRole="button"
-        onPress={onBack}
-        style={styles.iconButton}
-      >
-        <Text style={styles.backIcon}>‹</Text>
-      </Pressable>
+      {onBack ? (
+        <Pressable
+          accessibilityLabel="Voltar"
+          accessibilityRole="button"
+          onPress={onBack}
+          style={styles.iconButton}
+        >
+          <Text style={styles.backIcon}>‹</Text>
+        </Pressable>
+      ) : null}
       <View style={styles.copy}>
         <Text style={styles.eyebrow}>NAVEGAÇÃO</Text>
         <Text style={styles.title}>{roomName}</Text>

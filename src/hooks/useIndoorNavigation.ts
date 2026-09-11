@@ -32,10 +32,18 @@ export function useIndoorNavigation(room: Room | null, route: Route | null) {
   }, []);
 
   useEffect(() => {
-    // Follow the searched room's block automatically, matching the totem UX.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    if (room) setSelectedBuildingId(room.buildingId);
-  }, [room]);
+    if (room) {
+      // Follow the searched room's block automatically, matching the totem UX.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setSelectedBuildingId(room.buildingId);
+      return;
+    }
+    if (!selectedBuildingId && buildings.length > 0) {
+      // Idle state (no room searched yet): default to the first available
+      // block so the totem layout (blocks, floors, map) is visible right away.
+      setSelectedBuildingId(buildings[0].code);
+    }
+  }, [room, buildings, selectedBuildingId]);
 
   useEffect(() => {
     if (!selectedBuildingId) {

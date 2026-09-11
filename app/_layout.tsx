@@ -3,6 +3,7 @@ import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { useEffect } from 'react';
 
 import { AuthProvider } from '../src/contexts/AuthContext';
+import { navigationTheme } from '../src/constants/navigationTheme';
 import { useAuth } from '../src/hooks/useAuth';
 
 function RouteGuard() {
@@ -30,12 +31,12 @@ function RouteGuard() {
       <Stack
         screenOptions={{
           headerShown: false,
-          contentStyle: { backgroundColor: '#F8FAFC' },
+          contentStyle: { backgroundColor: navigationTheme.sidebarBackground },
         }}
       />
       {loading ? (
         <View style={styles.loadingScreen}>
-          <ActivityIndicator color="#0F766E" size="large" />
+          <ActivityIndicator color={navigationTheme.accent} size="large" />
         </View>
       ) : null}
     </View>
@@ -56,7 +57,7 @@ const styles = StyleSheet.create({
   },
   loadingScreen: {
     alignItems: 'center',
-    backgroundColor: '#F8FAFC',
+    backgroundColor: navigationTheme.sidebarBackground,
     flex: 1,
     justifyContent: 'center',
     bottom: 0,

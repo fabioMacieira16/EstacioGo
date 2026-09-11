@@ -10,6 +10,7 @@ import {
   View,
 } from 'react-native';
 
+import { navigationTheme } from '../src/constants/navigationTheme';
 import { useAuth } from '../src/hooks/useAuth';
 
 export default function LoginScreen() {
@@ -40,7 +41,10 @@ export default function LoginScreen() {
       <View style={styles.backgroundGlowSecondary} />
       <View style={styles.container}>
         <View style={styles.card}>
-          <Text style={styles.eyebrow}>CAMPUS ROUTE</Text>
+          <Text style={styles.brandPin}>📍</Text>
+          <Text style={styles.eyebrow}>
+            Campus <Text style={styles.eyebrowAccent}>Route</Text>
+          </Text>
           <Text style={styles.title}>Entre para encontrar seu caminho.</Text>
           <Text style={styles.subtitle}>
             Acesse o fluxo de teste para consultar salas e rotas.
@@ -55,7 +59,7 @@ export default function LoginScreen() {
               autoCapitalize="none"
               autoComplete="username"
               onChangeText={setEmail}
-              placeholder="Usuário"
+              placeholder="Usuário dsdsds"
               placeholderTextColor="#94A3B8"
               style={styles.input}
               value={email}
@@ -104,12 +108,12 @@ export default function LoginScreen() {
 
 const styles = StyleSheet.create({
   screen: {
-    backgroundColor: '#F8FAFC',
+    backgroundColor: navigationTheme.sidebarBackground,
     flex: 1,
     position: 'relative',
   },
   backgroundGlow: {
-    backgroundColor: '#DFF7F4',
+    backgroundColor: navigationTheme.accentSoft,
     borderRadius: 180,
     height: 360,
     position: 'absolute',
@@ -118,7 +122,7 @@ const styles = StyleSheet.create({
     width: 360,
   },
   backgroundGlowSecondary: {
-    backgroundColor: '#E0E7FF',
+    backgroundColor: navigationTheme.accentSoft,
     borderRadius: 180,
     bottom: -90,
     height: 260,
@@ -133,37 +137,38 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   card: {
-    backgroundColor: '#FFFFFF',
-    borderColor: '#E2E8F0',
+    backgroundColor: navigationTheme.panelBackground,
+    borderColor: navigationTheme.panelBorder,
     borderRadius: 24,
     borderWidth: 1,
     elevation: 6,
     gap: 18,
     padding: 24,
-    shadowColor: '#0F172A',
+    shadowColor: '#000000',
     shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.08,
+    shadowOpacity: 0.3,
     shadowRadius: 18,
   },
+  brandPin: { fontSize: 26 },
   eyebrow: {
-    color: '#0F766E',
-    fontSize: 12,
+    color: navigationTheme.textPrimary,
+    fontSize: 20,
     fontWeight: '800',
-    letterSpacing: 1.6,
   },
+  eyebrowAccent: { color: navigationTheme.accent },
   title: {
-    color: '#0F172A',
-    fontSize: 30,
+    color: navigationTheme.textPrimary,
+    fontSize: 26,
     fontWeight: '800',
-    lineHeight: 38,
+    lineHeight: 34,
   },
   subtitle: {
-    color: '#475569',
-    fontSize: 16,
-    lineHeight: 23,
+    color: navigationTheme.textSecondary,
+    fontSize: 15,
+    lineHeight: 22,
   },
   testCredentials: {
-    color: '#0F766E',
+    color: navigationTheme.accent,
     fontSize: 13,
     fontWeight: '700',
   },
@@ -171,13 +176,13 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   inputLabel: {
-    color: '#334155',
+    color: navigationTheme.textSecondary,
     fontSize: 13,
     fontWeight: '700',
   },
   input: {
-    backgroundColor: '#F8FAFC',
-    borderColor: '#CBD5E1',
+    backgroundColor: '#FFFFFF',
+    borderColor: navigationTheme.panelBorder,
     borderRadius: 12,
     borderWidth: 1,
     color: '#0F172A',
@@ -186,13 +191,13 @@ const styles = StyleSheet.create({
     paddingVertical: 13,
   },
   error: {
-    color: '#B91C1C',
+    color: '#F87171',
     fontSize: 13,
     fontWeight: '600',
   },
   primaryButton: {
     alignItems: 'center',
-    backgroundColor: '#0F766E',
+    backgroundColor: navigationTheme.accent,
     borderRadius: 12,
     paddingVertical: 14,
   },
@@ -203,7 +208,7 @@ const styles = StyleSheet.create({
     opacity: 0.9,
   },
   primaryButtonText: {
-    color: '#FFFFFF',
+    color: navigationTheme.textOnAccent,
     fontSize: 16,
     fontWeight: '700',
   },

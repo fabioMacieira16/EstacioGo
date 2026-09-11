@@ -9,6 +9,7 @@ import {
   View,
 } from 'react-native';
 
+import { navigationTheme } from '../../constants/navigationTheme';
 import { useUserLocation } from '../../hooks/useUserLocation';
 import type { RoomInput } from '../../types/room';
 
@@ -195,9 +196,9 @@ export function RoomForm({
           </Text>
         </View>
         <Switch
-          ios_backgroundColor="#CBD5E1"
-          trackColor={{ false: '#CBD5E1', true: '#99F6E4' }}
-          thumbColor={value.active ? '#0F766E' : '#F8FAFC'}
+          ios_backgroundColor={navigationTheme.panelBorder}
+          trackColor={{ false: navigationTheme.panelBorder, true: navigationTheme.accentSoft }}
+          thumbColor={value.active ? navigationTheme.accent : '#F8FAFC'}
           value={value.active}
           onValueChange={(input) => update('active', input)}
         />
@@ -252,22 +253,22 @@ const styles = StyleSheet.create({
   formHeader: { alignItems: 'center', flexDirection: 'row', gap: 12 },
   iconBadge: {
     alignItems: 'center',
-    backgroundColor: '#CCFBF1',
+    backgroundColor: navigationTheme.accentSoft,
     borderRadius: 12,
     height: 42,
     justifyContent: 'center',
     width: 42,
   },
-  iconText: { color: '#0F766E', fontSize: 26, fontWeight: '400', lineHeight: 30 },
+  iconText: { color: navigationTheme.accent, fontSize: 26, fontWeight: '400', lineHeight: 30 },
   headerCopy: { flex: 1, gap: 3 },
-  title: { color: '#0F172A', fontSize: 20, fontWeight: '800' },
-  subtitle: { color: '#64748B', fontSize: 13, lineHeight: 18 },
+  title: { color: navigationTheme.textPrimary, fontSize: 20, fontWeight: '800' },
+  subtitle: { color: navigationTheme.textSecondary, fontSize: 13, lineHeight: 18 },
   section: { gap: 12 },
-  sectionTitle: { color: '#0F172A', fontSize: 15, fontWeight: '800' },
-  sectionHint: { color: '#64748B', fontSize: 12, marginTop: -6 },
+  sectionTitle: { color: navigationTheme.textPrimary, fontSize: 15, fontWeight: '800' },
+  sectionHint: { color: navigationTheme.textSecondary, fontSize: 12, marginTop: -6 },
   locationButton: {
     alignItems: 'center',
-    borderColor: '#99F6E4',
+    borderColor: navigationTheme.accent,
     borderRadius: 10,
     borderWidth: 1,
     flexDirection: 'row',
@@ -277,20 +278,20 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
   },
   locationButtonDisabled: { opacity: 0.55 },
-  locationButtonPressed: { backgroundColor: '#F0FDFA' },
-  locationButtonIcon: { color: '#0F766E', fontSize: 20 },
-  locationButtonText: { color: '#0F766E', fontSize: 13, fontWeight: '700' },
+  locationButtonPressed: { backgroundColor: navigationTheme.accentSoft },
+  locationButtonIcon: { color: navigationTheme.accent, fontSize: 20 },
+  locationButtonText: { color: navigationTheme.accent, fontSize: 13, fontWeight: '700' },
   row: { flexDirection: 'row', flexWrap: 'wrap', gap: 12 },
   field: { flex: 1, gap: 7, minWidth: 140 },
   nameField: { flexGrow: 1 },
   halfField: { minWidth: 120 },
   labelRow: { alignItems: 'baseline', flexDirection: 'row', gap: 7 },
-  label: { color: '#334155', fontSize: 12, fontWeight: '700' },
-  hint: { color: '#94A3B8', fontSize: 11 },
-  optional: { color: '#94A3B8', fontSize: 11, fontStyle: 'italic' },
+  label: { color: navigationTheme.textSecondary, fontSize: 12, fontWeight: '700' },
+  hint: { color: navigationTheme.textSecondary, fontSize: 11 },
+  optional: { color: navigationTheme.textSecondary, fontSize: 11, fontStyle: 'italic' },
   input: {
-    backgroundColor: '#F8FAFC',
-    borderColor: '#CBD5E1',
+    backgroundColor: '#FFFFFF',
+    borderColor: navigationTheme.panelBorder,
     borderRadius: 10,
     borderWidth: 1,
     color: '#0F172A',
@@ -302,8 +303,8 @@ const styles = StyleSheet.create({
   descriptionInput: { minHeight: 78 },
   activeRow: {
     alignItems: 'center',
-    backgroundColor: '#F0FDFA',
-    borderColor: '#99F6E4',
+    backgroundColor: navigationTheme.sidebarBackground,
+    borderColor: navigationTheme.panelBorder,
     borderRadius: 12,
     borderWidth: 1,
     flexDirection: 'row',
@@ -313,17 +314,17 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   activeCopy: { flex: 1, gap: 3 },
-  activeTitle: { color: '#115E59', fontSize: 13, fontWeight: '800' },
-  activeHint: { color: '#0F766E', fontSize: 11 },
-  error: { color: '#B91C1C', fontSize: 13, fontWeight: '600' },
+  activeTitle: { color: navigationTheme.textPrimary, fontSize: 13, fontWeight: '800' },
+  activeHint: { color: navigationTheme.textSecondary, fontSize: 11 },
+  error: { color: '#F87171', fontSize: 13, fontWeight: '600' },
   submitButton: {
     alignItems: 'center',
-    backgroundColor: '#0F766E',
+    backgroundColor: navigationTheme.accent,
     borderRadius: 10,
     justifyContent: 'center',
     minHeight: 46,
   },
   submitButtonDisabled: { opacity: 0.7 },
   submitButtonPressed: { opacity: 0.9 },
-  submitText: { color: '#FFFFFF', fontSize: 14, fontWeight: '800' },
+  submitText: { color: navigationTheme.textOnAccent, fontSize: 14, fontWeight: '800' },
 });

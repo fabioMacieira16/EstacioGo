@@ -4,6 +4,7 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import { RoomForm } from '../../src/components/RoomForm';
 import { DEFAULT_CAMPUS_ID, DEFAULT_MAP_ORIGIN } from '../../src/constants/map';
+import { navigationTheme } from '../../src/constants/navigationTheme';
 import { campusIndoorMap } from '../../src/constants/indoorMap';
 import { initialRooms } from '../../src/constants/initialRooms';
 import { useRooms } from '../../src/hooks/useRooms';
@@ -189,14 +190,14 @@ export default function AdminRoomsScreen() {
 
 const styles = StyleSheet.create({
   screen: {
-    backgroundColor: '#F8FAFC',
+    backgroundColor: navigationTheme.sidebarBackground,
     gap: 18,
     padding: 20,
     paddingBottom: 32,
   },
   headerCard: {
-    backgroundColor: '#FFFFFF',
-    borderColor: '#E2E8F0',
+    backgroundColor: navigationTheme.panelBackground,
+    borderColor: navigationTheme.panelBorder,
     borderRadius: 24,
     borderWidth: 1,
     gap: 16,
@@ -208,28 +209,28 @@ const styles = StyleSheet.create({
   },
   backButton: {
     alignItems: 'center',
-    backgroundColor: '#E2E8F0',
+    backgroundColor: navigationTheme.sidebarBackground,
     borderRadius: 22,
     height: 44,
     justifyContent: 'center',
     width: 44,
   },
-  backIcon: { color: '#0F172A', fontSize: 32, lineHeight: 36 },
+  backIcon: { color: navigationTheme.textPrimary, fontSize: 32, lineHeight: 36 },
   eyebrow: {
-    color: '#0F766E',
+    color: navigationTheme.accent,
     fontSize: 11,
     fontWeight: '800',
     letterSpacing: 1.4,
   },
   title: {
-    color: '#0F172A',
+    color: navigationTheme.textPrimary,
     fontSize: 28,
     fontWeight: '800',
     marginTop: 4,
   },
   primaryButton: {
     alignItems: 'center',
-    backgroundColor: '#0F766E',
+    backgroundColor: navigationTheme.accent,
     borderRadius: 12,
     paddingVertical: 12,
   },
@@ -237,32 +238,32 @@ const styles = StyleSheet.create({
     opacity: 0.9,
   },
   primaryButtonText: {
-    color: '#FFFFFF',
+    color: navigationTheme.textOnAccent,
     fontSize: 14,
     fontWeight: '700',
   },
   seedButton: {
-    backgroundColor: '#E0F2FE',
+    backgroundColor: navigationTheme.accentSoft,
     borderRadius: 10,
     marginBottom: 16,
     paddingHorizontal: 12,
     paddingVertical: 10,
   },
-  seedButtonText: { color: '#0369A1', fontSize: 13, fontWeight: '800' },
+  seedButtonText: { color: navigationTheme.accent, fontSize: 13, fontWeight: '800' },
   formCard: {
-    backgroundColor: '#FFFFFF',
-    borderColor: '#E2E8F0',
+    backgroundColor: navigationTheme.panelBackground,
+    borderColor: navigationTheme.panelBorder,
     borderRadius: 18,
     borderWidth: 1,
     padding: 16,
   },
   status: {
-    color: '#475569',
+    color: navigationTheme.textSecondary,
     fontSize: 14,
     fontWeight: '600',
   },
   error: {
-    color: '#B91C1C',
+    color: '#F87171',
     fontSize: 13,
     fontWeight: '600',
   },
@@ -270,8 +271,8 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   roomCard: {
-    backgroundColor: '#FFFFFF',
-    borderColor: '#E2E8F0',
+    backgroundColor: navigationTheme.panelBackground,
+    borderColor: navigationTheme.panelBorder,
     borderRadius: 18,
     borderWidth: 1,
     gap: 8,
@@ -283,14 +284,14 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   roomCode: {
-    color: '#0F172A',
+    color: navigationTheme.textPrimary,
     fontSize: 16,
     fontWeight: '800',
   },
   inactiveTag: {
-    backgroundColor: '#FEE2E2',
+    backgroundColor: 'rgba(248, 113, 113, 0.16)',
     borderRadius: 999,
-    color: '#B91C1C',
+    color: '#F87171',
     fontSize: 11,
     fontWeight: '700',
     overflow: 'hidden',
@@ -298,12 +299,12 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
   },
   roomName: {
-    color: '#0F172A',
+    color: navigationTheme.textPrimary,
     fontSize: 18,
     fontWeight: '700',
   },
   roomMeta: {
-    color: '#475569',
+    color: navigationTheme.textSecondary,
     fontSize: 13,
     fontWeight: '600',
   },
@@ -314,13 +315,13 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   secondaryAction: {
-    backgroundColor: '#EFF6FF',
+    backgroundColor: navigationTheme.sidebarBackground,
     borderRadius: 10,
     paddingHorizontal: 12,
     paddingVertical: 8,
   },
   secondaryActionText: {
-    color: '#1D4ED8',
+    color: navigationTheme.accent,
     fontSize: 12,
     fontWeight: '700',
   },
@@ -328,13 +329,13 @@ const styles = StyleSheet.create({
     opacity: 0.5,
   },
   dangerAction: {
-    backgroundColor: '#FEE2E2',
+    backgroundColor: 'rgba(248, 113, 113, 0.16)',
     borderRadius: 10,
     paddingHorizontal: 12,
     paddingVertical: 8,
   },
   dangerActionText: {
-    color: '#B91C1C',
+    color: '#F87171',
     fontSize: 12,
     fontWeight: '700',
   },
