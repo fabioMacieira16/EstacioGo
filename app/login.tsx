@@ -43,11 +43,10 @@ export default function LoginScreen() {
         <View style={styles.backgroundGlowSecondary} />
         <View style={styles.container}>
           <View style={styles.card}>
-            <Text style={styles.brandPin}>📍</Text>
             <Text style={styles.eyebrow}>
-              Campus <Text style={styles.eyebrowAccent}>Route</Text>
+              Estacio <Text style={styles.eyebrowAccent}>📍GO </Text>
             </Text>
-            <Text style={styles.title}>Entre para encontrar seu caminho.</Text>
+            <Text style={styles.title}>Encontre seu caminho.</Text>
             <Text style={styles.subtitle}>
               Acesse o fluxo de teste para consultar salas e rotas.
             </Text>
@@ -143,13 +142,16 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   card: {
+    alignSelf: 'center',
     backgroundColor: navigationTheme.panelBackground,
     borderColor: navigationTheme.panelBorder,
     borderRadius: 24,
     borderWidth: 1,
     elevation: 6,
     gap: 18,
+    maxWidth: 400,
     padding: 24,
+    width: '100%',
     shadowColor: '#000000',
     shadowOffset: { width: 0, height: 10 },
     shadowOpacity: 0.3,
