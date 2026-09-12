@@ -1,6 +1,6 @@
 import { useMemo, useRef, useState } from 'react';
 import { PanResponder, Platform, ScrollView, StyleSheet, View, type GestureResponderEvent } from 'react-native';
-import Svg, { G, Rect, Text as SvgText } from 'react-native-svg';
+import Svg, { Defs, G, LinearGradient, RadialGradient, Rect, Stop, Text as SvgText } from 'react-native-svg';
 
 import { navigationTheme } from '../../constants/navigationTheme';
 import type { IndoorFloor, IndoorRoute, MapCoordinate, MapRoom } from '../../types/indoorMap';
@@ -112,9 +112,38 @@ export function IndoorMap({
             height={floor.height * scale}
             viewBox={`0 0 ${floor.width} ${floor.height}`}
           >
+            <Defs>
+              <LinearGradient id="roomGradient" x1="0" y1="0" x2="0" y2="1">
+                <Stop offset="0" stopColor="#EEF3FA" />
+                <Stop offset="1" stopColor="#C7D2E3" />
+              </LinearGradient>
+              <LinearGradient id="roomGradientSelected" x1="0" y1="0" x2="0" y2="1">
+                <Stop offset="0" stopColor="#BFF7EA" />
+                <Stop offset="1" stopColor="#6FDCC4" />
+              </LinearGradient>
+              <LinearGradient id="wallGradientH" x1="0" y1="0" x2="0" y2="1">
+                <Stop offset="0" stopColor="#B7C0CC" />
+                <Stop offset="1" stopColor="#616D7C" />
+              </LinearGradient>
+              <LinearGradient id="wallGradientV" x1="0" y1="0" x2="1" y2="0">
+                <Stop offset="0" stopColor="#B7C0CC" />
+                <Stop offset="1" stopColor="#616D7C" />
+              </LinearGradient>
+              <RadialGradient id="markerGloss" cx="35%" cy="30%" r="70%">
+                <Stop offset="0" stopColor="#FFFFFF" stopOpacity="0.95" />
+                <Stop offset="1" stopColor="#FFFFFF" stopOpacity="0" />
+              </RadialGradient>
+              <RadialGradient id="floorVignette" cx="50%" cy="45%" r="75%">
+                <Stop offset="0" stopColor="#FFFFFF" stopOpacity="0" />
+                <Stop offset="1" stopColor="#94A3B8" stopOpacity="0.25" />
+              </RadialGradient>
+              <LinearGradient id="waypointGradient" x1="0" y1="0" x2="0" y2="1">
+                <Stop offset="0" stopColor="#475569" />
+                <Stop offset="1" stopColor="#1E293B" />
+              </LinearGradient>
+            </Defs>
             <Rect width={floor.width} height={floor.height} fill={navigationTheme.mapBackground} />
-            <Rect x={50} y={270} width={820} height={50} fill="#E2E8F0" />
-            <Rect x={330} y={50} width={210} height={570} fill="#E2E8F0" />
+            <Rect width={floor.width} height={floor.height} fill="url(#floorVignette)" />
             {floor.rooms.map((room) => (
               <RoomShape
                 key={room.id}
@@ -148,12 +177,21 @@ export function IndoorMap({
             {floor.waypoints.map((waypoint) => (
               <G key={waypoint.id}>
                 <Rect
+                  x={waypoint.position.x - 13}
+                  y={waypoint.position.y - 11}
+                  width={28}
+                  height={28}
+                  rx={7}
+                  fill="#0F172A"
+                  opacity={0.25}
+                />
+                <Rect
                   x={waypoint.position.x - 14}
                   y={waypoint.position.y - 14}
                   width={28}
                   height={28}
                   rx={7}
-                  fill="#334155"
+                  fill="url(#waypointGradient)"
                 />
                 <SvgText
                   x={waypoint.position.x}

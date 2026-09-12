@@ -22,6 +22,16 @@ export function RouteLine({ points }: { points: MapCoordinate[] }) {
         strokeLinecap="round"
         strokeLinejoin="round"
       />
+      {/* Thin highlight down the middle for a glossy, raised "pipe" look. */}
+      <Polyline
+        points={points.map((point) => `${point.x},${point.y}`).join(' ')}
+        fill="none"
+        stroke="#93C5FD"
+        strokeWidth={3}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        opacity={0.7}
+      />
     </>
   );
 }

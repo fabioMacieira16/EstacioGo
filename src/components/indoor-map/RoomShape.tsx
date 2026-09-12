@@ -23,12 +23,22 @@ export function RoomShape({ room, selected, onPress }: RoomShapeProps) {
 
   return (
     <G {...pressProps}>
+      {/* Soft drop shadow to lift the room off the floor, like the reference mock. */}
+      <Rect
+        x={room.position.x + 2}
+        y={room.position.y + 3}
+        width={room.width}
+        height={room.height}
+        fill="#0F172A"
+        opacity={0.12}
+        rx={4}
+      />
       <Rect
         x={room.position.x}
         y={room.position.y}
         width={room.width}
         height={room.height}
-        fill={selected ? '#99F6E4' : '#DCE4F0'}
+        fill={selected ? 'url(#roomGradientSelected)' : 'url(#roomGradient)'}
         stroke={selected ? '#0D9488' : '#94A3B8'}
         strokeWidth={selected ? 3 : 1.5}
         rx={4}

@@ -14,6 +14,18 @@ import { indoorMapService } from '../../src/services/indoorMapService';
 import { routeService } from '../../src/services/routeService';
 import type { Room } from '../../src/types/room';
 
+// Nomes de exibição para os blocos conhecidos. Blocos citados no letreiro da
+// entrada mas ainda sem planta cadastrada (E, G, H) ficam com um nome
+// genérico até que vídeos/fotos confirmem o conteúdo deles.
+const BUILDING_LABELS: Record<string, string> = {
+  A: 'Bloco Principal',
+  D: 'Bloco D',
+  E: 'Bloco E',
+  F: 'Bloco F',
+  G: 'Bloco G',
+  H: 'Bloco H',
+};
+
 export default function AdminRoomsScreen() {
   const router = useRouter();
   const { rooms, loading, error, create, update, deactivate, remove } =
@@ -47,16 +59,29 @@ export default function AdminRoomsScreen() {
     setSeedingIndoor(true);
     setSeedIndoorError(null);
     try {
-      const buildingCode = campusIndoorMap.floors[0]?.buildingId;
-      if (!buildingCode) return;
-
       const existingBuildings = await buildingService.listBuildings(DEFAULT_CAMPUS_ID);
-      if (!existingBuildings.some((building) => building.code === buildingCode)) {
+      const existingCodes = new Set(existingBuildings.map((building) => building.code));
+
+      // Registra um Building para cada bloco que já tem planta cadastrada em
+      // campusIndoorMap, mais os blocos citados no letreiro da entrada que
+      // ainda não têm planta (ficam visíveis no seletor com estado vazio).
+      const buildingCodesWithFloorPlan = new Set(
+        campusIndoorMap.floors.map((floor) => floor.buildingId),
+      );
+      const allKnownBuildingCodes = new Set([
+        ...buildingCodesWithFloorPlan,
+        ...Object.keys(BUILDING_LABELS),
+      ]);
+
+      for (const code of allKnownBuildingCodes) {
+        if (existingCodes.has(code)) continue;
         await buildingService.createBuilding({
           campusId: DEFAULT_CAMPUS_ID,
-          code: buildingCode,
-          name: 'Bloco F',
-          description: 'Planta de demonstração (dados simulados).',
+          code,
+          name: BUILDING_LABELS[code] ?? `Bloco ${code}`,
+          description: buildingCodesWithFloorPlan.has(code)
+            ? 'Planta de demonstração (dados simulados).'
+            : 'Bloco identificado na sinalização do campus; planta ainda não cadastrada.',
           active: true,
         });
       }
@@ -125,8 +150,8 @@ export default function AdminRoomsScreen() {
         >
           <Text style={styles.seedButtonText}>
             {seedingIndoor
-              ? 'Cadastrando planta indoor...'
-              : 'Cadastrar planta indoor de demonstração (Bloco F)'}
+              ? 'Cadastrando blocos e plantas...'
+              : 'Cadastrar blocos e plantas indoor de demonstração'}
           </Text>
         </Pressable>
         {seedIndoorError ? <Text style={styles.error}>{seedIndoorError}</Text> : null}
