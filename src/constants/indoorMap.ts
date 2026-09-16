@@ -28,7 +28,6 @@ export const campusIndoorMap: IndoorMapData = {
         { id: 'npj-ground', code: 'NPJ', name: 'NPJ', position: { x: 560, y: 185 }, width: 150, height: 65, accessible: true },
         { id: 'naf-ground', code: 'NAF-PROJETE', name: 'NAF-Projete', position: { x: 720, y: 185 }, width: 140, height: 65, accessible: true },
         { id: 'hub-ground', code: 'HUB', name: 'HUB', position: { x: 610, y: 430 }, width: 120, height: 70, accessible: true },
-        { id: 'wc-ground', code: 'WC', name: 'WC', position: { x: 740, y: 430 }, width: 75, height: 70, accessible: true },
         { id: 'family-wc-ground', code: 'WC-FAMILIA', name: 'WC Família', position: { x: 820, y: 430 }, width: 70, height: 70, accessible: true },
         { id: 'registry-ground', code: 'SALA-MATRICULA', name: 'Sala de Matrícula', position: { x: 730, y: 540 }, width: 160, height: 85, accessible: true },
         // Extensão do bloco administrativo (mesmo agrupamento de

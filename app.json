@@ -1,0 +1,15 @@
+{
+  "expo": {
+    "name": "Estacio Go",
+    "slug": "estaciogo",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "scheme": "estaciogo",
+    "userInterfaceStyle": "automatic",
+    "owner": "grupodispositivosmoveis",
+    "plugins": ["expo-router"],
+    "web": {
+      "bundler": "metro"
+    }
+  }
+}

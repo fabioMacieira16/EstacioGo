@@ -1,5 +1,5 @@
 import { useRouter } from 'expo-router';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -28,6 +28,7 @@ const BUILDING_LABELS: Record<string, string> = {
 
 export default function AdminRoomsScreen() {
   const router = useRouter();
+  const scrollViewRef = useRef<ScrollView>(null);
   const { rooms, loading, error, create, update, deactivate, remove } =
     useRooms();
   const [editing, setEditing] = useState<Room | null>(null);
@@ -115,7 +116,7 @@ export default function AdminRoomsScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-    <ScrollView contentContainerStyle={styles.screen}>
+    <ScrollView ref={scrollViewRef} contentContainerStyle={styles.screen}>
       <View style={styles.formCard}>
         <View style={styles.headerTopRow}>
           <Pressable
@@ -186,7 +187,10 @@ export default function AdminRoomsScreen() {
 
             <View style={styles.roomActions}>
               <Pressable
-                onPress={() => setEditing(room)}
+                onPress={() => {
+                  setEditing(room);
+                  scrollViewRef.current?.scrollTo({ y: 0, animated: true });
+                }}
                 style={styles.secondaryAction}
               >
                 <Text style={styles.secondaryActionText}>Editar</Text>
@@ -222,17 +226,20 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   screen: {
+    alignSelf: 'center',
     gap: 18,
-    padding: 20,
+    maxWidth: 980,
+    padding: 16,
     paddingBottom: 32,
+    width: '100%',
   },
   headerCard: {
     backgroundColor: navigationTheme.panelBackground,
     borderColor: navigationTheme.panelBorder,
-    borderRadius: 24,
+    borderRadius: 16,
     borderWidth: 1,
-    gap: 16,
-    padding: 20,
+    gap: 12,
+    padding: 16,
   },
   headerTopRow: {
     flexDirection: 'row',
@@ -255,7 +262,7 @@ const styles = StyleSheet.create({
   },
   title: {
     color: navigationTheme.textPrimary,
-    fontSize: 28,
+    fontSize: 24,
     fontWeight: '800',
     marginTop: 4,
   },
@@ -276,17 +283,17 @@ const styles = StyleSheet.create({
   seedButton: {
     backgroundColor: navigationTheme.accentSoft,
     borderRadius: 10,
-    marginBottom: 16,
+    marginBottom: 10,
     paddingHorizontal: 12,
-    paddingVertical: 10,
+    paddingVertical: 8,
   },
   seedButtonText: { color: navigationTheme.accent, fontSize: 13, fontWeight: '800' },
   formCard: {
     backgroundColor: navigationTheme.panelBackground,
     borderColor: navigationTheme.panelBorder,
-    borderRadius: 18,
+    borderRadius: 14,
     borderWidth: 1,
-    padding: 16,
+    padding: 14,
   },
   status: {
     color: navigationTheme.textSecondary,
@@ -304,10 +311,10 @@ const styles = StyleSheet.create({
   roomCard: {
     backgroundColor: navigationTheme.panelBackground,
     borderColor: navigationTheme.panelBorder,
-    borderRadius: 18,
+    borderRadius: 14,
     borderWidth: 1,
-    gap: 8,
-    padding: 16,
+    gap: 6,
+    padding: 14,
   },
   roomHeader: {
     alignItems: 'center',
@@ -331,7 +338,7 @@ const styles = StyleSheet.create({
   },
   roomName: {
     color: navigationTheme.textPrimary,
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: '700',
   },
   roomMeta: {
