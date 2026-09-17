@@ -56,10 +56,3 @@ export type IndoorRoute = {
   distanceMeters: number;
   estimatedTimeMinutes?: number;
 };
-
-export type IndoorMapData = {
-  id: string;
-  name: string;
-  floors: IndoorFloor[];
-  routes: Record<string, IndoorRoute>;
-};
