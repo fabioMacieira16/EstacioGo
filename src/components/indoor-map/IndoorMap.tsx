@@ -23,7 +23,7 @@ type IndoorMapProps = {
   onRoomPress?: (room: MapRoom) => void;
 };
 
-const MIN_SCALE = 0.7;
+const MIN_SCALE = 0.4;
 const MAX_SCALE = 2.2;
 
 function touchDistance(event: GestureResponderEvent): number {
