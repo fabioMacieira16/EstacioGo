@@ -6,12 +6,9 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { RoomForm } from '../../src/components/RoomForm';
 import { DEFAULT_CAMPUS_ID, DEFAULT_MAP_ORIGIN } from '../../src/constants/map';
 import { navigationTheme } from '../../src/constants/navigationTheme';
-import { campusIndoorMap } from '../../src/constants/indoorMap';
 import { initialRooms } from '../../src/constants/initialRooms';
 import { useRooms } from '../../src/hooks/useRooms';
 import { buildingService } from '../../src/services/buildingService';
-import { indoorMapService } from '../../src/services/indoorMapService';
-import { routeService } from '../../src/services/routeService';
 import type { Room } from '../../src/types/room';
 
 // Nomes de exibição para os blocos conhecidos. Blocos citados no letreiro da
@@ -63,51 +60,19 @@ export default function AdminRoomsScreen() {
       const existingBuildings = await buildingService.listBuildings(DEFAULT_CAMPUS_ID);
       const existingCodes = new Set(existingBuildings.map((building) => building.code));
 
-      // Registra um Building para cada bloco que já tem planta cadastrada em
-      // campusIndoorMap, mais os blocos citados no letreiro da entrada que
-      // ainda não têm planta (ficam visíveis no seletor com estado vazio).
-      const buildingCodesWithFloorPlan = new Set(
-        campusIndoorMap.floors.map((floor) => floor.buildingId),
-      );
-      const allKnownBuildingCodes = new Set([
-        ...buildingCodesWithFloorPlan,
-        ...Object.keys(BUILDING_LABELS),
-      ]);
-
-      for (const code of allKnownBuildingCodes) {
+      for (const code of Object.keys(BUILDING_LABELS)) {
         if (existingCodes.has(code)) continue;
         await buildingService.createBuilding({
           campusId: DEFAULT_CAMPUS_ID,
           code,
-          name: BUILDING_LABELS[code] ?? `Bloco ${code}`,
-          description: buildingCodesWithFloorPlan.has(code)
-            ? 'Planta de demonstração (dados simulados).'
-            : 'Bloco identificado na sinalização do campus; planta ainda não cadastrada.',
+          name: BUILDING_LABELS[code],
+          description: 'Bloco identificado na sinalização do campus.',
           active: true,
         });
-      }
-
-      for (const floor of campusIndoorMap.floors) {
-        await indoorMapService.saveFloor({ ...floor, campusId: DEFAULT_CAMPUS_ID, active: true });
-      }
-
-      const demoRoute = campusIndoorMap.routes.f101;
-      const f101 = rooms.find((room) => room.code === 'F101');
-      if (demoRoute && f101 && !f101.routeId) {
-        const routeId = await routeService.createRoute({
-          campusId: DEFAULT_CAMPUS_ID,
-          name: 'Entrada Principal → F101',
-          origin: DEFAULT_MAP_ORIGIN,
-          destination: DEFAULT_MAP_ORIGIN,
-          coordinates: [DEFAULT_MAP_ORIGIN, DEFAULT_MAP_ORIGIN],
-          indoor: demoRoute,
-          active: true,
-        });
-        await update(f101.id, { ...inputFromRoom(f101), routeId });
       }
     } catch (error) {
       setSeedIndoorError(
-        error instanceof Error ? error.message : 'Não foi possível cadastrar a planta.',
+        error instanceof Error ? error.message : 'Não foi possível cadastrar os blocos.',
       );
     } finally {
       setSeedingIndoor(false);

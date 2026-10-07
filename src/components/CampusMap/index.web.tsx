@@ -3,20 +3,6 @@ import { ImageBackground, Pressable, StyleSheet, Text, View } from 'react-native
 
 import type { Coordinates } from '../../types/coordinates';
 
-const orientationPoints = [
-  { id: 'library', label: 'Biblioteca', x: 31, y: 27 },
-  { id: 'health', label: 'Consultório de saúde', x: 27, y: 38 },
-  { id: 'coordination', label: 'Coord. de cursos', x: 59, y: 27 },
-  { id: 'npi', label: 'NPI', x: 59, y: 43 },
-  { id: 'naf', label: 'NAF-Projete', x: 57, y: 52 },
-  { id: 'elevator', label: 'Elevador', x: 35, y: 63 },
-  { id: 'polo', label: 'Polo EAD', x: 47, y: 63 },
-  { id: 'wc', label: 'WC', x: 54, y: 63 },
-  { id: 'hub', label: 'HUB', x: 70, y: 52 },
-  { id: 'registry', label: 'Sala de matrícula', x: 74, y: 68 },
-  { id: 'entrance', label: 'Entrada', x: 87, y: 61 },
-];
-
 export type CampusMapProps = {
   origin: Coordinates;
   destination: Coordinates;
@@ -110,15 +96,6 @@ export function CampusMap({
         <View style={styles.floorPill}>
           <Text style={styles.floorPillText}>{floorLabel}</Text>
         </View>
-        {orientationPoints.map((point) => (
-          <View
-            key={point.id}
-            style={[styles.orientationPoint, { left: `${point.x}%`, top: `${point.y}%` }]}
-          >
-            <View style={styles.orientationDot} />
-            <Text style={styles.orientationLabel}>{point.label}</Text>
-          </View>
-        ))}
         {positions.slice(1).map((position, index) => {
           const previous = positions[index];
           const deltaX = (position.x - previous.x) * size.width / 100;
@@ -198,9 +175,6 @@ const styles = StyleSheet.create({
   webMarker: { alignItems: 'center', position: 'absolute', transform: [{ translateX: -12 }, { translateY: -12 }] },
   webMarkerDot: { borderColor: '#FFFFFF', borderRadius: 12, borderWidth: 3, height: 24, shadowColor: '#0F172A', shadowOpacity: 0.22, shadowRadius: 5, width: 24 },
   webMarkerLabel: { backgroundColor: '#FFFFFF', borderRadius: 5, color: '#0F172A', fontSize: 11, fontWeight: '700', marginTop: 5, paddingHorizontal: 7, paddingVertical: 4 },
-  orientationPoint: { alignItems: 'center', position: 'absolute', transform: [{ translateX: -5 }, { translateY: -5 }] },
-  orientationDot: { backgroundColor: '#F59E0B', borderColor: '#FFFFFF', borderRadius: 5, borderWidth: 1, height: 10, width: 10 },
-  orientationLabel: { backgroundColor: 'rgba(255, 255, 255, 0.9)', borderRadius: 4, color: '#334155', fontSize: 9, fontWeight: '700', marginTop: 3, paddingHorizontal: 4, paddingVertical: 2 },
   mapBadge: { alignItems: 'center', backgroundColor: '#FFFFFF', borderRadius: 8, flexDirection: 'row', gap: 7, left: 16, paddingHorizontal: 10, paddingVertical: 8, position: 'absolute', top: 16 },
   legendDot: { borderRadius: 5, height: 10, width: 10 },
   mapBadgeText: { color: '#334155', fontSize: 12, fontWeight: '700' },
